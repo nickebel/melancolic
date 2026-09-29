@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#11131d">
+  <title>Melancolic — IA</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">M</div>
+        <div>
+          <h1>Melancolic</h1>
+          <span>IA local</span>
+        </div>
+      </div>
+      <button id="newChat" class="icon-button" type="button" aria-label="Nova conversa" title="Nova conversa">＋</button>
+    </header>
+
+    <section id="status" class="status">
+      <span id="statusDot" class="dot"></span>
+      <span id="statusText">Preparando a IA…</span>
+    </section>
+
+    <section id="chat" class="chat" aria-live="polite">
+      <div class="welcome">
+        <div class="welcome-mark">M</div>
+        <h2>Olá.</h2>
+        <p>Sou a IA local do Melancolic. Posso conversar com você sem enviar suas mensagens para uma API.</p>
+      </div>
+    </section>
+
+    <div id="loading" class="loading hidden">
+      <span></span><span></span><span></span>
+      <b>Pensando…</b>
+    </div>
+
+    <form id="composer" class="composer">
+      <textarea id="input" rows="1" maxlength="600" autocomplete="off"
+        placeholder="Escreva uma mensagem…" aria-label="Mensagem"></textarea>
+      <button id="send" type="submit" aria-label="Enviar">➤</button>
+    </form>
+
+    <footer>
+      <span id="modelInfo">Modelo local • sem API</span>
+      <span>Melancolic V5</span>
+    </footer>
+  </main>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
