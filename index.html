@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0c1b20">
+  <meta name="description" content="Um espaço íntimo e silencioso para escrever, guardar fotos e ouvir os próprios pensamentos.">
+  <title>Entre o silêncio — meu espaço</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="background" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <div class="welcome-screen" id="welcomeScreen">
+    <div class="welcome-card">
+      <div class="welcome-mark" aria-hidden="true">◌</div>
+      <p class="eyebrow">antes de entrar</p>
+      <h2>deixa a chuva ficar.</h2>
+      <p>Um pouco de chuva, trovões ao longe e um lugar quieto para você.</p>
+      <button id="enterButton" class="enter-button" type="button">entrar no silêncio</button>
+      <small>o som pode ser silenciado a qualquer momento.</small>
+    </div>
+  </div>
+
+  <audio id="rainAudio" src="assets/rain-thunder.mp3" loop preload="auto"></audio>
+  <button id="soundToggle" class="sound-toggle" type="button" aria-label="Silenciar chuva" aria-pressed="true">
+    <span class="sound-icon" aria-hidden="true">◒</span>
+    <span id="soundLabel">chuva ligada</span>
+  </button>
+
+  <header class="topbar">
+    <a class="brand" href="#inicio" aria-label="Voltar ao início">
+      <span class="brand-mark">◌</span>
+      <span>
+        <strong>entre o silêncio</strong>
+        <small>um lugar só meu</small>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="Navegação principal">
+      <button class="nav-link active" data-section="inicio">desabafar</button>
+      <button class="nav-link" data-section="historias">meus registros</button>
+      <button class="nav-link" data-section="galeria">fotos & sons</button>
+    </nav>
+
+    <div class="privacy-pill" title="Os dados deste site ficam neste navegador">
+      <span class="dot"></span>
+      local neste dispositivo
+    </div>
+  </header>
+
+  <main id="inicio" class="page">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">sem pressa · sem julgamento</p>
+        <h1>Você não precisa<br><em>segurar tudo sozinho.</em></h1>
+        <p class="hero-text">Escreva o que está passando pela sua cabeça. Grave sua voz. Guarde uma foto. Aqui, as coisas podem simplesmente existir sem precisar de uma explicação bonita.</p>
+      </div>
+      <div class="mascot-wrap">
+        <div class="mascot-bubble" id="mascotBubble" aria-live="polite">
+          eu fico aqui com você.
+        </div>
+        <button id="mascotButton" class="mascot-button" type="button" aria-label="Interagir com o mascote">
+          <span class="mascot-glow" aria-hidden="true"></span>
+          <img id="mascotImage" class="mascot-image" src="assets/mascot-idle.png" alt="Pequeno mascote encapuzado" draggable="false">
+        </button>
+        <div class="mascot-actions" aria-label="Ações do mascote">
+          <button type="button" data-mascot-action="talk">conversar</button>
+          <button type="button" data-mascot-action="hug">abraçar</button>
+          <button type="button" data-mascot-action="quiet">ficar em silêncio</button>
+        </div>
+        <p class="mascot-hint">clique nele. ele também pode ficar quietinho.</p>
+      </div>
+    </section>
+
+    <section class="composer glass-card" aria-labelledby="composer-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">agora</p>
+          <h2 id="composer-title">O que você está tentando dizer?</h2>
+        </div>
+        <time id="todayLabel"></time>
+      </div>
+
+      <div class="field-row">
+        <label class="field grow">
+          <span>título <small>(opcional)</small></span>
+          <input id="entryTitle" type="text" maxlength="100" placeholder="ex.: hoje foi difícil" autocomplete="off">
+        </label>
+      </div>
+
+      <label class="field">
+        <span>desabafo</span>
+        <textarea id="entryText" rows="9" placeholder="Pode começar por qualquer coisa…&#10;&#10;Não precisa escrever bonito. Não precisa terminar. Só coloque para fora."></textarea>
+      </label>
+
+      <div class="composer-tools">
+        <div class="upload-group">
+          <label class="tool-button" for="photoInput">
+            <span class="tool-icon">＋</span>
+            adicionar fotos
+          </label>
+          <input id="photoInput" type="file" accept="image/*" multiple hidden>
+
+          <label class="tool-button" for="audioInput">
+            <span class="tool-icon">◖</span>
+            enviar áudio
+          </label>
+          <input id="audioInput" type="file" accept="audio/*" multiple hidden>
+
+          <button id="recordButton" class="tool-button" type="button">
+            <span class="tool-icon record-icon"></span>
+            gravar agora
+          </button>
+        </div>
+
+        <button id="saveButton" class="save-button" type="button">guardar este momento</button>
+      </div>
+
+      <div id="attachmentPreview" class="attachment-preview" aria-live="polite"></div>
+
+      <div id="recordingPanel" class="recording-panel hidden">
+        <div class="recording-state"><span class="record-dot"></span><span id="recordingLabel">gravando…</span></div>
+        <div id="recordingTimer">00:00</div>
+        <button id="stopRecordingButton" type="button" class="stop-recording">parar</button>
+      </div>
+
+      <p id="saveStatus" class="save-status" role="status"></p>
+    </section>
+
+    <section class="quiet-note">
+      <span class="line"></span>
+      <p>Este espaço foi feito para o que você normalmente engole em silêncio.</p>
+      <span class="line"></span>
+    </section>
+  </main>
+
+  <section id="historias" class="page secondary-page hidden-section">
+    <div class="section-shell">
+      <div class="page-heading">
+        <div>
+          <p class="eyebrow">o que ficou</p>
+          <h2>Meus registros</h2>
+          <p>Um arquivo dos momentos que você decidiu não apagar.</p>
+        </div>
+        <div class="stats" id="statsBox">0 registros</div>
+      </div>
+      <div id="entriesList" class="entries-list"></div>
+      <div id="emptyEntries" class="empty-state">
+        <div class="empty-icon">∅</div>
+        <h3>Ainda não há nada aqui.</h3>
+        <p>Volte para “desabafar” e escreva o primeiro registro.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="galeria" class="page secondary-page hidden-section">
+    <div class="section-shell">
+      <div class="page-heading">
+        <div>
+          <p class="eyebrow">fragmentos</p>
+          <h2>Fotos & sons</h2>
+          <p>Uma visão só dos anexos que você guardou.</p>
+        </div>
+      </div>
+      <div id="mediaGallery" class="media-gallery"></div>
+      <div id="emptyGallery" class="empty-state">
+        <div class="empty-icon">◌</div>
+        <h3>Nenhum fragmento ainda.</h3>
+        <p>Fotos e áudios aparecerão aqui quando forem anexados a um registro.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>Feito para escrever devagar, respirar entre as palavras e não precisar parecer bem o tempo todo.</p>
+    <button id="clearDataButton" class="danger-link" type="button">apagar todos os registros</button>
+  </footer>
+
+  <template id="entryTemplate">
+    <article class="entry-card glass-card">
+      <div class="entry-top">
+        <div>
+          <p class="entry-date"></p>
+          <h3 class="entry-title"></h3>
+        </div>
+        <button class="delete-entry" type="button" title="Apagar este registro">×</button>
+      </div>
+      <p class="entry-text"></p>
+      <div class="entry-media"></div>
+    </article>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>
