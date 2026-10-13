@@ -1486,12 +1486,6 @@
       if (button.dataset.section === 'mensagens') renderPersonalMessages();
       if (button.dataset.section === 'clima') renderWeather();
       if (button.dataset.section === 'escrita') { document.body.classList.remove('writing-focus'); if (!deepWritingSeconds) resetDeepWritingTimer(); }
-      if (button.dataset.section === 'constelacao') renderConstellation();
-      if (button.dataset.section === 'eu-passado') renderPastMemory();
-      if (button.dataset.section === 'museu') renderMuseum();
-      if (button.dataset.section === 'mensagens') renderPersonalMessages();
-      if (button.dataset.section === 'clima') renderWeather();
-      if (button.dataset.section === 'escrita') { document.body.classList.remove('writing-focus'); if (!deepWritingSeconds) resetDeepWritingTimer(); }
       if (button.dataset.section !== 'refugio' && playing) stopAmbientSound(true);
     }));
     document.addEventListener('visibilitychange', () => {
