@@ -106,3 +106,9 @@
   .timeline-card::before { left: -23px; width: 7px; height: 7px; }
   .timeline-card time { text-align: left; }
 }
+
+
+/* Overrides responsive para o filtro adicional por etiqueta na linha do tempo. */
+.timeline-filters { grid-template-columns: .8fr 1.05fr .9fr 1.2fr 1.1fr auto; }
+@media (max-width: 1000px) { .timeline-filters { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 680px) { .timeline-filters { grid-template-columns: 1fr; } }

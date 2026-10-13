@@ -40,6 +40,9 @@
       <button class="nav-link" data-section="capsula" type="button">cápsula do tempo</button>
       <button class="nav-link" data-section="refugio" type="button">refúgio sensorial</button>
       <button class="nav-link" data-section="linha-do-tempo" type="button">linha do tempo</button>
+      <button class="nav-link" data-section="kit" type="button">kit de acolhimento</button>
+      <button class="nav-link" data-section="ritual" type="button">ritual do dia</button>
+      <button class="nav-link" data-section="privacidade" type="button">backup & proteção</button>
     </nav>
     <div class="privacy-pill" title="Os dados deste site ficam neste navegador">
       <span class="dot"></span>
@@ -73,6 +76,10 @@
       <label class="field">
         <span>desabafo</span>
         <textarea id="entryText" rows="9" placeholder="Pode começar por qualquer coisa…&#10;&#10;Não precisa escrever bonito. Não precisa terminar. Só coloque para fora."></textarea>
+      </label>
+      <label class="field" for="entryTags">
+        <span>etiquetas pessoais <small>(opcional · separe por vírgulas)</small></span>
+        <input id="entryTags" type="text" maxlength="240" placeholder="ex.: família, saudades, trabalho" autocomplete="off">
       </label>
       <div class="composer-tools">
         <div class="upload-group">
@@ -220,6 +227,60 @@
     </div>
   </section>
 
+
+  <section id="kit" class="page secondary-page hidden-section">
+    <div class="section-shell extras-shell">
+      <header class="extras-intro"><p class="eyebrow">feito por você, para os dias difíceis</p><h1>Seu kit de <em>acolhimento.</em></h1><p>Prepare algumas palavras e pequenos lembretes para encontrar quando precisar de um pouco de cuidado. Você escolhe o que faz sentido para si.</p></header>
+      <div class="kit-callout glass-card"><span class="kit-callout-mark" aria-hidden="true">♡</span><div><p class="eyebrow">para lembrar neste momento</p><h2 id="kitPreviewMessage">Você pode começar criando uma mensagem gentil para si mesmo.</h2><p id="kitPreviewHint">Não precisa resolver tudo de uma vez. Escolha só o próximo pequeno passo.</p></div></div>
+      <section class="glass-card extra-card" aria-labelledby="kitFormTitle">
+        <div class="section-heading"><div><p class="eyebrow">suas palavras, seu jeito</p><h2 id="kitFormTitle">O que você gostaria de encontrar aqui?</h2></div></div>
+        <label class="field" for="kitMessage"><span>uma mensagem para você ler <small>(opcional)</small></span><textarea id="kitMessage" rows="3" maxlength="2000" placeholder="Escreva algo que gostaria de ouvir quando as coisas ficarem difíceis…"></textarea></label>
+        <label class="field" for="kitThings"><span>pequenas coisas que costumam ajudar <small>(uma por linha)</small></span><textarea id="kitThings" rows="4" maxlength="1600" placeholder="tomar água e respirar&#10;ouvir uma música conhecida&#10;sair um pouco para tomar ar"></textarea></label>
+        <label class="field" for="kitMemory"><span>uma lembrança que te faz bem <small>(opcional)</small></span><textarea id="kitMemory" rows="3" maxlength="1600" placeholder="Uma pessoa, um lugar, uma conquista ou um momento que você gostaria de recordar…"></textarea></label>
+        <label class="field" for="kitPeople"><span>pessoas com quem você pode conversar <small>(opcional)</small></span><textarea id="kitPeople" rows="2" maxlength="1000" placeholder="Nomes ou formas de contato que você quer ter por perto…"></textarea></label>
+        <div class="extra-action-row"><p id="kitStatus" class="feature-status" role="status" aria-live="polite"></p><button id="saveKitButton" class="save-button" type="button">guardar meu kit</button></div>
+        <p class="feature-footnote">O kit fica salvo neste navegador. Adicione apenas os dados pessoais que se sentir confortável em guardar neste dispositivo.</p>
+      </section>
+      <section class="kit-open-section"><div class="page-heading"><div><p class="eyebrow">uma coisa de cada vez</p><h2>Preciso de um pequeno apoio</h2><p>Veja os lembretes que você preparou para si ou peça uma sugestão simples, sem julgamentos.</p></div></div><div id="kitSavedList" class="kit-saved-list"></div><div class="kit-suggestion glass-card"><div><p class="eyebrow">uma pequena ideia</p><h3 id="kitSuggestionText">Solte os ombros e perceba o apoio da cadeira ou do chão.</h3></div><button id="kitNextSuggestionButton" class="tool-button" type="button">outra sugestão</button></div></section>
+    </div>
+  </section>
+
+  <section id="ritual" class="page secondary-page hidden-section">
+    <div class="section-shell extras-shell">
+      <header class="extras-intro"><p class="eyebrow">um encerramento gentil</p><h1>O dia pode <em>terminar aqui.</em></h1><p>Reserve dois minutos para tirar um pouco do peso da cabeça. Você pode guardar as respostas no diário ou encerrar sem salvar.</p></header>
+      <section class="glass-card extra-card ritual-card">
+        <div class="ritual-progress"><span>01</span><div></div><span>02</span><div></div><span>03</span></div>
+        <label class="field" for="ritualThoughts"><span>o que mais ocupou minha cabeça hoje?</span><textarea id="ritualThoughts" rows="3" maxlength="3000" placeholder="Não precisa resumir o dia inteiro. Escolha só o que está mais presente…"></textarea></label>
+        <label class="field" for="ritualRelease"><span>o que eu gostaria de deixar para trás por enquanto?</span><textarea id="ritualRelease" rows="3" maxlength="3000" placeholder="Algo que não precisa ser resolvido nesta noite, uma preocupação ou uma cobrança…"></textarea></label>
+        <label class="field" for="ritualKeep"><span>o que merece ser lembrado deste dia?</span><textarea id="ritualKeep" rows="3" maxlength="3000" placeholder="Pode ser algo grande, pequeno ou simplesmente o fato de ter chegado até aqui…"></textarea></label>
+        <div class="ritual-footer"><p id="ritualStatus" class="feature-status" role="status" aria-live="polite">Suas respostas são guardadas como rascunho neste navegador até você decidir o que fazer com elas.</p><div class="ritual-actions"><button id="clearRitualButton" class="tool-button" type="button">encerrar sem salvar</button><button id="saveRitualButton" class="save-button" type="button">guardar no meu diário</button></div></div>
+        <p class="feature-footnote">Ao guardar, as três respostas viram um registro comum em “Meus registros” e aparecem também na linha do tempo. Ao encerrar sem salvar, o rascunho local é descartado.</p>
+      </section>
+    </div>
+  </section>
+
+  <section id="privacidade" class="page secondary-page hidden-section">
+    <div class="section-shell extras-shell">
+      <header class="extras-intro"><p class="eyebrow">suas memórias merecem cuidado</p><h1>Privacidade e <em>backup.</em></h1><p>Exporte uma cópia protegida por senha para guardar fora do navegador. Você também pode importar uma cópia anterior ou bloquear a interface deste dispositivo com um PIN.</p></header>
+      <section class="glass-card extra-card" aria-labelledby="backupTitle">
+        <div class="section-heading"><div><p class="eyebrow">uma cópia para guardar com segurança</p><h2 id="backupTitle">Backup criptografado</h2></div></div>
+        <label class="field" for="backupPassword"><span>senha para criptografar ou abrir o backup</span><input id="backupPassword" type="password" minlength="8" autocomplete="new-password" placeholder="use uma senha longa, com pelo menos 8 caracteres"></label>
+        <div class="backup-actions"><button id="exportBackupButton" class="save-button" type="button">criar backup criptografado</button><label class="tool-button backup-file-label" for="backupFileInput">escolher backup para importar</label><input id="backupFileInput" type="file" accept=".melancolic-backup,.json,application/json" hidden></div>
+        <p id="backupStatus" class="feature-status" role="status" aria-live="polite"></p>
+        <p class="feature-footnote">O backup usa AES-GCM com chave derivada da senha via PBKDF2. Guarde o arquivo e a senha em locais seguros: não existe recuperação da senha do backup. A importação mescla registros e não apaga os atuais.</p>
+      </section>
+      <section class="glass-card extra-card pin-card" aria-labelledby="pinTitle">
+        <div class="section-heading"><div><p class="eyebrow">uma barreira adicional neste dispositivo</p><h2 id="pinTitle">Bloqueio por PIN</h2><p>Crie um PIN numérico para bloquear a interface quando sair do site.</p></div></div>
+        <label class="field pin-current-row hidden" id="pinCurrentRow" for="pinCurrent"><span>PIN atual</span><input id="pinCurrent" type="password" inputmode="numeric" autocomplete="current-password" maxlength="12" placeholder="PIN atual"></label>
+        <div class="field-row"><label class="field grow" for="pinNew"><span>novo PIN <small>(4 a 12 dígitos)</small></span><input id="pinNew" type="password" inputmode="numeric" autocomplete="new-password" maxlength="12" placeholder="somente números"></label><label class="field grow" for="pinConfirm"><span>confirmar PIN</span><input id="pinConfirm" type="password" inputmode="numeric" autocomplete="new-password" maxlength="12" placeholder="repita o PIN"></label></div>
+        <div class="pin-actions"><button id="savePinButton" class="save-button" type="button">definir ou trocar PIN</button><button id="removePinButton" class="tool-button" type="button">remover PIN</button><button id="lockNowButton" class="tool-button" type="button">bloquear agora</button></div>
+        <p id="pinStatus" class="feature-status" role="status" aria-live="polite"></p>
+        <div id="pinRecoveryNotice" class="pin-recovery-notice hidden"><p class="eyebrow">código de recuperação · mostrado uma única vez</p><p>Guarde este código em um lugar seguro. Ele permite remover o bloqueio se esquecer o PIN. Se perder o PIN e este código, a interface não poderá ser desbloqueada por este recurso.</p><code id="pinRecoveryCodeText"></code><div class="pin-actions"><button id="copyRecoveryCodeButton" class="tool-button" type="button">copiar código</button><button id="downloadRecoveryCodeButton" class="tool-button" type="button">baixar código</button><button id="dismissRecoveryCodeButton" class="save-button" type="button">já guardei</button></div></div>
+        <div class="security-warning"><strong>Importante:</strong> o PIN bloqueia a interface, mas não criptografa o banco de dados local. Para proteção real dos arquivos exportados, use o backup criptografado e uma senha que não seja o próprio PIN.</div>
+      </section>
+    </div>
+  </section>
+
   <section id="capsula" class="page secondary-page hidden-section">
     <div class="section-shell extras-shell">
       <header class="extras-intro">
@@ -280,6 +341,15 @@
           </div>
           <label class="volume-control" for="ambienceVolume"><span>volume</span><output id="ambienceVolumeLabel" for="ambienceVolume">25%</output><input id="ambienceVolume" type="range" min="0" max="60" step="5" value="25"></label>
           <div class="extra-action-row"><p id="ambienceStatus" class="feature-status" role="status" aria-live="polite">Nenhum som está tocando. O áudio começa quando você apertar o botão.</p><button id="ambienceToggleButton" class="save-button" type="button">ouvir ambiente</button></div>
+          <div class="extra-divider"></div>
+          <p class="eyebrow">guardar meu ambiente</p>
+          <label class="field" for="refugePresetName"><span>nome do refúgio <small>(opcional)</small></span><input id="refugePresetName" type="text" maxlength="60" placeholder="ex.: meu canto de paz" autocomplete="off"></label>
+          <div class="refuge-preset-actions">
+            <button id="saveRefugePresetButton" class="save-button" type="button">salvar esta combinação</button>
+            <button id="loadRefugePresetButton" class="tool-button" type="button" disabled>abrir meu refúgio salvo</button>
+          </div>
+          <p id="refugePresetStatus" class="feature-status" role="status" aria-live="polite"></p>
+          <p id="refugePresetSummary" class="feature-footnote">Você ainda não salvou uma combinação pessoal.</p>
           <p class="feature-footnote">Os sons são gerados pelo próprio navegador. Não é preciso baixar áudios e nada toca sem você iniciar.</p>
         </div>
       </section>
@@ -297,7 +367,8 @@
         <label class="field" for="timelineMonth"><span>mês</span><input type="month" id="timelineMonth"></label>
         <label class="field" for="timelineType"><span>tipo de memória</span><select id="timelineType"><option value="all">tudo</option><option value="registro">desabafos e registros</option><option value="sentimento">sentimentos</option><option value="capsula">cartas abertas</option></select></label>
         <label class="field" for="timelineMood"><span>sentimento</span><select id="timelineMood"><option value="all">todos</option><option value="calmo">em paz</option><option value="feliz">feliz</option><option value="ansioso">ansioso</option><option value="triste">triste</option><option value="cansado">cansado</option><option value="confuso">confuso</option><option value="irritado">irritado</option></select></label>
-        <label class="field timeline-search-field" for="timelineSearch"><span>buscar nas lembranças</span><input type="search" id="timelineSearch" placeholder="uma palavra, título ou trecho…"></label>
+        <label class="field timeline-search-field" for="timelineSearch"><span>buscar nas lembranças</span><input type="search" id="timelineSearch" placeholder="palavra, título ou etiqueta…"></label>
+        <label class="field" for="timelineTag"><span>etiqueta</span><select id="timelineTag"><option value="all">todas as etiquetas</option></select></label>
         <button id="clearTimelineFilters" class="tool-button" type="button">limpar filtros</button>
       </section>
       <div class="page-heading timeline-heading"><div><p class="eyebrow">visto em perspectiva</p><h2>Sua linha do tempo</h2><p>Ordenada da lembrança mais recente para a mais antiga.</p></div><div id="timelineCount" class="stats">0 lembranças</div></div>
@@ -318,9 +389,20 @@
         <button class="delete-entry" type="button" title="Apagar este registro">×</button>
       </div>
       <p class="entry-text"></p>
+      <div class="entry-tags"></div>
       <div class="entry-media"></div>
     </article>
   </template>
+
+  <div id="privacyGate" class="privacy-gate hidden" role="dialog" aria-modal="true" aria-labelledby="privacyGateTitle">
+    <div class="privacy-gate-card glass-card"><div class="privacy-gate-mark" aria-hidden="true">◌</div><p class="eyebrow">seu espaço pessoal</p><h2 id="privacyGateTitle">Vamos entrar com calma.</h2><p>Este Melancolic está bloqueado neste dispositivo. Digite seu PIN para continuar.</p>
+      <form id="pinUnlockForm"><label class="field" for="pinGateInput"><span>seu PIN</span><input id="pinGateInput" type="password" inputmode="numeric" autocomplete="current-password" maxlength="12" required placeholder="PIN numérico"></label><button class="save-button gate-submit" type="submit">desbloquear meu espaço</button></form>
+      <p id="pinGateStatus" class="feature-status" role="status" aria-live="polite"></p><button id="showRecoveryButton" class="danger-link" type="button">usar código de recuperação</button>
+      <form id="pinRecoveryForm" class="hidden"><label class="field" for="pinRecoveryInput"><span>código de recuperação</span><input id="pinRecoveryInput" type="text" autocomplete="off" maxlength="40" placeholder="cole seu código de recuperação"></label><button class="save-button gate-submit" type="submit">recuperar acesso</button></form>
+      <p class="feature-footnote">O bloqueio reduz o acesso casual à interface, mas não substitui a criptografia do dispositivo ou um backup criptografado.</p>
+    </div>
+  </div>
+
   <script src="script.js"></script>
   <script src="mood.js"></script>
   <script src="features.js"></script>

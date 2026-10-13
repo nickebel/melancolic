@@ -176,6 +176,12 @@ async function renderEntries() {
       article.querySelector('.entry-date').textContent = formatDate(entry.createdAt);
       article.querySelector('.entry-title').textContent = entry.title || 'sem título';
       article.querySelector('.entry-text').textContent = entry.text || '';
+      const tagWrap = article.querySelector('.entry-tags');
+      if (tagWrap) {
+        const tags = Array.isArray(entry.tags) ? entry.tags : [];
+        tags.forEach((tag) => tagWrap.appendChild(makeElement('span', 'entry-tag', '#' + String(tag).replace(/^#/, ''))));
+        if (!tags.length) tagWrap.remove();
+      }
       const mediaWrap = article.querySelector('.entry-media');
       (entry.media || []).forEach((media) => appendMedia(mediaWrap, media));
       article.querySelector('.delete-entry').addEventListener('click', async () => {
@@ -212,11 +218,13 @@ async function saveEntry() {
   const textEl = $('#entryText'), titleEl = $('#entryTitle'), statusEl = $('#saveStatus'), saveButton = $('#saveButton');
   if (!textEl || !titleEl || !statusEl || !saveButton) return;
   const text = textEl.value.trim(), title = titleEl.value.trim();
+  const rawTags = ($('#entryTags')?.value || '').split(/[,;\n]/);
+  const tags = [...new Set(rawTags.map((tag) => tag.trim().replace(/^#/, '').slice(0, 24)).filter(Boolean))].slice(0, 8);
   if (!text && state.attachments.length === 0) { statusEl.textContent = 'Escreva alguma coisa ou adicione um arquivo antes de guardar.'; return; }
   saveButton.disabled = true; statusEl.textContent = 'guardando…';
-  const entry = { id:createId(), title, text, createdAt:Date.now(), media:state.attachments.map((item) => ({ id:item.id, name:item.file.name, type:item.type, mimeType:item.file.type || 'application/octet-stream', size:item.file.size, blob:item.file })) };
+  const entry = { id:createId(), title, text, tags, createdAt:Date.now(), media:state.attachments.map((item) => ({ id:item.id, name:item.file.name, type:item.type, mimeType:item.file.type || 'application/octet-stream', size:item.file.size, blob:item.file })) };
   try {
-    await dbPut(entry); titleEl.value=''; textEl.value=''; state.attachments=[]; renderAttachmentPreview(); statusEl.textContent='guardado neste dispositivo.';
+    await dbPut(entry); titleEl.value=''; textEl.value=''; if ($('#entryTags')) $('#entryTags').value=''; state.attachments=[]; renderAttachmentPreview(); statusEl.textContent='guardado neste dispositivo.';
     setTimeout(() => { if ($('#saveStatus')) $('#saveStatus').textContent=''; }, 3500);
   } catch (error) { console.error(error); statusEl.textContent='Não foi possível guardar. Abra o site em localhost ou HTTPS e tente novamente.'; }
   finally { saveButton.disabled=false; }
