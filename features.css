@@ -218,3 +218,7 @@ body.writing-focus .writing-header h1 { font-size:clamp(32px,5vw,52px); }
   .writing-footer { align-items:stretch; flex-direction:column; }
   .writing-footer .creative-actions { width:100%; }
 }
+
+.writing-head-actions { display:flex; align-items:center; justify-content:flex-end; gap:9px; flex-wrap:wrap; }
+body.writing-focus #writingFocusButton { display:none; }
+@media (max-width:800px) { .writing-head-actions { justify-content:flex-start; } }

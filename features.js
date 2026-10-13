@@ -15,7 +15,7 @@
   const ENTRY_STORE = 'entries';
   const BACKUP_FORMAT = 'melancolic-encrypted-backup';
   const BACKUP_VERSION = 1;
-  const BACKUP_KEYS = [CAPSULE_KEY, MOOD_KEY, KIT_KEY, REFUGE_KEY, RITUAL_DRAFT_KEY];
+  const BACKUP_KEYS = [CAPSULE_KEY, MOOD_KEY, KIT_KEY, REFUGE_KEY, RITUAL_DRAFT_KEY, 'melancolic-personal-museum-v1', 'melancolic-personal-messages-v1', 'melancolic-interior-weather-v1', 'melancolic-deep-writing-draft-v1'];
   const MOODS = {
     calmo: { label: 'em paz', emoji: '☁' },
     feliz: { label: 'feliz', emoji: '☀' },
