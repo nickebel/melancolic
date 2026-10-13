@@ -337,22 +337,6 @@ function init() {
   $('#sendChatButton')?.addEventListener('click',sendChat);
   $('#clearChatButton')?.addEventListener('click',clearChat);
   $('#useEntryButton')?.addEventListener('click',useCurrentEntry);
-  $('#menuToggleButton')?.addEventListener('click', () => {
-    const nav = $('#mainNav');
-    const toggle = $('#menuToggleButton');
-    if (!nav || !toggle) return;
-    const open = !nav.classList.contains('is-open');
-    nav.classList.toggle('is-open', open);
-    toggle.setAttribute('aria-expanded', String(open));
-    toggle.setAttribute('aria-label', open ? 'Fechar menu de navegação' : 'Abrir menu de navegação');
-  });
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') closeMainMenu();
-  });
-  document.addEventListener('click', (event) => {
-    if (!event.target.closest('.topbar')) closeMainMenu();
-  });
-  $$('.nav-link').forEach((btn)=>btn.addEventListener('click',()=>switchSection(btn.dataset.section)));
   $('#entryText')?.addEventListener('keydown',(event)=>{ if((event.ctrlKey||event.metaKey)&&event.key==='Enter'){event.preventDefault();saveEntry();} });
   $('#chatInput')?.addEventListener('keydown',(event)=>{ if(event.key==='Enter' && !event.shiftKey){event.preventDefault();sendChat();} });
   renderEntries(); renderGallery(); renderChat();
