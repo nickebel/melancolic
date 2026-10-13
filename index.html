@@ -43,6 +43,12 @@
       <button class="nav-link" data-section="kit" type="button">kit de acolhimento</button>
       <button class="nav-link" data-section="ritual" type="button">ritual do dia</button>
       <button class="nav-link" data-section="privacidade" type="button">backup & proteção</button>
+      <button class="nav-link" data-section="constelacao" type="button">constelação</button>
+      <button class="nav-link" data-section="eu-passado" type="button">eu do passado</button>
+      <button class="nav-link" data-section="museu" type="button">museu pessoal</button>
+      <button class="nav-link" data-section="mensagens" type="button">palavras para mim</button>
+      <button class="nav-link" data-section="clima" type="button">clima interior</button>
+      <button class="nav-link" data-section="escrita" type="button">escrita profunda</button>
     </nav>
     <div class="privacy-pill" title="Os dados deste site ficam neste navegador">
       <span class="dot"></span>
@@ -375,6 +381,103 @@
       <div id="timelineStatus" class="feature-status timeline-status" role="status" aria-live="polite"></div>
       <div id="timelineItems" class="timeline-list"></div>
       <div id="emptyTimeline" class="empty-state"><div class="empty-icon">⌁</div><h3>A história começa com o que você guarda.</h3><p>Quando tiver registros, check-ins ou cartas abertas, eles vão se reunir aqui.</p></div>
+    </div>
+  </section>
+
+
+  <section id="constelacao" class="page secondary-page hidden-section">
+    <div class="section-shell extras-shell">
+      <header class="extras-intro"><p class="eyebrow">pequenas luzes que ficaram</p><h1>Constelação de <em>memórias.</em></h1><p>Cada ponto guarda um pedaço do que você viveu. Escolha uma estrela para revisitar um registro ou um sentimento. Não existe ordem certa para olhar para a própria história.</p></header>
+      <section class="creative-card glass-card">
+        <div class="creative-toolbar"><label class="field" for="constellationTagFilter"><span>olhar por etiqueta</span><select id="constellationTagFilter"><option value="all">todas as memórias</option></select></label><p id="constellationCount" class="feature-status" role="status" aria-live="polite">Suas memórias vão aparecer aqui.</p></div>
+        <div id="constellationStars" class="constellation-stars" aria-label="Constelação interativa de memórias"></div>
+        <article id="constellationDetail" class="constellation-detail" aria-live="polite"><p class="eyebrow">uma lembrança por vez</p><h2>Escolha uma estrela.</h2><p>O que você guardou merece ser encontrado com calma.</p></article>
+      </section>
+    </div>
+  </section>
+
+  <section id="eu-passado" class="page secondary-page hidden-section">
+    <div class="section-shell extras-shell">
+      <header class="extras-intro"><p class="eyebrow">um encontro entre tempos</p><h1>Encontro com meu <em>eu do passado.</em></h1><p>Leia algo que você escreveu antes e responda com a pessoa que é hoje. Você não precisa corrigir quem era: pode apenas oferecer companhia.</p></header>
+      <section class="creative-card glass-card">
+        <label class="field" for="pastEntrySelector"><span>escolha um registro antigo</span><select id="pastEntrySelector"><option value="">carregando seus registros…</option></select></label>
+        <article id="pastMemoryCard" class="past-memory-card"><p class="eyebrow">o que você viveu</p><h2>Suas palavras estarão aqui.</h2><p>Escolha um registro para reler.</p></article>
+        <label class="field" for="pastReflectionText"><span>o que você diria a si mesmo hoje?</span><textarea id="pastReflectionText" rows="7" placeholder="Talvez você queira acolher aquela versão de si, contar o que mudou ou dizer que ela não precisava saber tudo naquele dia…"></textarea></label>
+        <div class="creative-actions"><button id="savePastReflectionButton" class="save-button" type="button">guardar esta resposta no diário</button><p id="pastReflectionStatus" class="feature-status" role="status" aria-live="polite"></p></div>
+      </section>
+    </div>
+  </section>
+
+  <section id="museu" class="page secondary-page hidden-section">
+    <div class="section-shell extras-shell">
+      <header class="extras-intro"><p class="eyebrow">uma galeria que só você entende</p><h1>Meu museu <em>pessoal.</em></h1><p>Reúna fotografias, sons e palavras em pequenas coleções. Dê nomes às prateleiras do seu jeito; nada é enviado para outro lugar.</p></header>
+      <section class="creative-card glass-card">
+        <form id="museumCollectionForm" class="museum-create-row">
+          <label class="field grow" for="museumCollectionName"><span>nome de uma nova coleção</span><input id="museumCollectionName" type="text" maxlength="40" placeholder="ex.: dias que quero lembrar" autocomplete="off"></label>
+          <button class="tool-button" type="submit">criar coleção</button>
+        </form>
+        <p id="museumStatus" class="feature-status" role="status" aria-live="polite"></p>
+        <div class="creative-toolbar museum-filters">
+          <label class="field" for="museumTypeFilter"><span>mostrar</span><select id="museumTypeFilter"><option value="all">tudo que guardei</option><option value="image">fotografias</option><option value="audio">sons e áudios</option><option value="text">palavras</option></select></label>
+          <label class="field" for="museumCollectionFilter"><span>coleção</span><select id="museumCollectionFilter"><option value="all">todas as coleções</option></select></label>
+        </div>
+        <div id="museumCollections" class="museum-collection-chips" aria-label="Coleções disponíveis"></div>
+        <div id="museumItems" class="museum-items"></div>
+        <div id="museumEmpty" class="empty-state"><div class="empty-icon">◌</div><h3>Seu museu está começando.</h3><p>Guarde um texto, uma fotografia ou um áudio na área de desabafo; depois, ele poderá aparecer nesta galeria.</p></div>
+      </section>
+    </div>
+  </section>
+
+  <section id="mensagens" class="page secondary-page hidden-section">
+    <div class="section-shell extras-shell">
+      <header class="extras-intro"><p class="eyebrow">palavras escritas por você, para você</p><h1>Mensagens que eu precisava <em>ouvir.</em></h1><p>Deixe recados para dias específicos: quando a saudade apertar, quando você duvidar de si ou quando só precisar respirar. Use suas próprias palavras.</p></header>
+      <section class="creative-card glass-card">
+        <div class="message-surprise">
+          <p class="eyebrow">um recado para agora</p><h2 id="messageSurpriseTitle">Você pode deixar palavras aqui para seu futuro.</h2><p id="messageSurpriseBody">Crie uma mensagem sua e volte quando precisar dela.</p>
+          <button id="surpriseMessageButton" class="tool-button" type="button">escolher uma mensagem para mim</button>
+        </div>
+        <form id="personalMessageForm" class="creative-form">
+          <label class="field" for="personalMessageSituation"><span>para qual momento?</span><select id="personalMessageSituation"><option value="ansiedade">quando a ansiedade aparecer</option><option value="saudade">quando a saudade apertar</option><option value="cansaco">quando eu estiver cansado</option><option value="duvida">quando eu duvidar de mim</option><option value="recomeco">quando eu precisar recomeçar</option><option value="alegria">para lembrar de um dia bom</option><option value="livre">para qualquer momento</option></select></label>
+          <label class="field" for="personalMessageTitle"><span>título <small>(opcional)</small></span><input id="personalMessageTitle" type="text" maxlength="70" placeholder="ex.: vai com calma"></label>
+          <label class="field" for="personalMessageBody"><span>escreva seu recado</span><textarea id="personalMessageBody" rows="4" maxlength="1200" required placeholder="O que você gostaria de lembrar quando esse momento chegar?"></textarea></label>
+          <button class="save-button" type="submit">guardar esta mensagem</button>
+        </form>
+        <p id="personalMessageStatus" class="feature-status" role="status" aria-live="polite"></p>
+        <div id="personalMessageList" class="personal-message-list"></div>
+        <div id="personalMessageEmpty" class="empty-state"><div class="empty-icon">♡</div><h3>Você ainda não deixou recados.</h3><p>Escreva uma mensagem que gostaria de encontrar em outro dia.</p></div>
+      </section>
+    </div>
+  </section>
+
+  <section id="clima" class="page secondary-page hidden-section">
+    <div class="section-shell extras-shell">
+      <header class="extras-intro"><p class="eyebrow">não precisa estar sol todos os dias</p><h1>Meu clima <em>interior.</em></h1><p>Escolha um símbolo para representar como o dia está por dentro. Seu check-in emocional pode sugerir um clima, mas só você decide qual combina com o que sente.</p></header>
+      <section class="creative-card glass-card">
+        <div class="weather-current"><p class="eyebrow">o tempo de hoje</p><div id="weatherCurrentIcon" class="weather-current-icon" aria-hidden="true">☁</div><h2 id="weatherCurrentTitle">Um dia de cada vez.</h2><p id="weatherCurrentText">Escolha o símbolo que combina com você hoje.</p><p id="weatherMoodLink" class="feature-status"></p></div>
+        <div id="weatherOptions" class="weather-options" role="group" aria-label="Escolha seu clima interior">
+          <button class="weather-option" type="button" data-weather="sun" aria-pressed="false"><span aria-hidden="true">☀</span><strong>ensolarado</strong><small>leveza ou alegria</small></button>
+          <button class="weather-option" type="button" data-weather="breeze" aria-pressed="false"><span aria-hidden="true">♧</span><strong>brisa</strong><small>calma ou espaço</small></button>
+          <button class="weather-option" type="button" data-weather="cloud" aria-pressed="false"><span aria-hidden="true">☁</span><strong>nublado</strong><small>cansaço ou pausa</small></button>
+          <button class="weather-option" type="button" data-weather="rain" aria-pressed="false"><span aria-hidden="true">☂</span><strong>chuva</strong><small>tristeza ou saudade</small></button>
+          <button class="weather-option" type="button" data-weather="fog" aria-pressed="false"><span aria-hidden="true">≋</span><strong>neblina</strong><small>incerteza ou confusão</small></button>
+          <button class="weather-option" type="button" data-weather="storm" aria-pressed="false"><span aria-hidden="true">ϟ</span><strong>tempestade</strong><small>intensidade ou irritação</small></button>
+        </div>
+        <label class="field" for="weatherNote"><span>uma palavra sobre esse clima <small>(opcional)</small></span><textarea id="weatherNote" rows="3" maxlength="700" placeholder="O que está acontecendo dentro de você hoje?"></textarea></label>
+        <div class="creative-actions"><button id="saveWeatherButton" class="save-button" type="button">guardar o clima de hoje</button><p id="weatherStatus" class="feature-status" role="status" aria-live="polite"></p></div>
+        <div class="page-heading weather-history-heading"><div><p class="eyebrow">dias que passaram por você</p><h2>Climas recentes</h2></div></div>
+        <div id="weatherHistory" class="weather-history"></div>
+      </section>
+    </div>
+  </section>
+
+  <section id="escrita" class="page secondary-page hidden-section">
+    <div class="section-shell extras-shell writing-shell">
+      <header class="writing-header"><div><p class="eyebrow">um lugar sem interrupção</p><h1>Escrita <em>profunda.</em></h1><p>Não precisa chegar a uma conclusão. Só acompanhe o que aparece, uma frase de cada vez.</p></div><button id="exitWritingFocusButton" class="tool-button" type="button">sair do modo foco</button></header>
+      <section class="writing-card">
+        <div class="writing-tools"><label class="field" for="writingTimerLength"><span>tempo, se ajudar</span><select id="writingTimerLength"><option value="5">5 minutos</option><option value="10">10 minutos</option><option value="20">20 minutos</option></select></label><div class="writing-timer"><span id="writingTimerDisplay">05:00</span><div class="writing-timer-actions"><button id="writingTimerStart" class="tool-button" type="button">começar</button><button id="writingTimerReset" class="tool-button" type="button">reiniciar</button></div></div></div>
+        <label class="field" for="deepWritingText"><span>deixe as palavras virem</span><textarea id="deepWritingText" rows="15" placeholder="Comece por uma palavra. Ou fique um instante sem escrever. Não há ritmo certo aqui."></textarea></label>
+        <div class="writing-footer"><p id="deepWritingStatus" class="feature-status" aria-live="polite">Seu rascunho é salvo automaticamente neste navegador.</p><div class="creative-actions"><button id="saveDeepWritingButton" class="save-button" type="button">guardar no diário</button><button id="clearDeepWritingDraftButton" class="tool-button" type="button">limpar rascunho</button></div></div>
+      </section>
     </div>
   </section>
 

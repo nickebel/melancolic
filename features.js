@@ -888,6 +888,534 @@
     }
   }
 
+
+  const MUSEUM_KEY = 'melancolic-personal-museum-v1';
+  const PERSONAL_MESSAGES_KEY = 'melancolic-personal-messages-v1';
+  const WEATHER_KEY = 'melancolic-interior-weather-v1';
+  const DEEP_WRITING_DRAFT_KEY = 'melancolic-deep-writing-draft-v1';
+  const DEFAULT_COLLECTIONS = ['Momentos que guardo', 'Dias difíceis', 'Pequenas alegrias'];
+  const WEATHER_INFO = {
+    sun: { title: 'Um pouco de sol por dentro.', name: 'ensolarado', icon: '☀', text: 'Há espaço para a leveza — sem precisar que tudo esteja perfeito.' },
+    breeze: { title: 'Uma brisa passando.', name: 'brisa', icon: '♧', text: 'Talvez exista um pouco de calma ou espaço para respirar.' },
+    cloud: { title: 'Hoje o céu está nublado.', name: 'nublado', icon: '☁', text: 'Dias mais lentos também fazem parte da vida. Você não precisa se apressar.' },
+    rain: { title: 'Deixe a chuva existir.', name: 'chuva', icon: '☂', text: 'Tristeza e saudade merecem espaço, sem cobrança para passar depressa.' },
+    fog: { title: 'Nem tudo precisa estar claro.', name: 'neblina', icon: '≋', text: 'Você pode seguir aos poucos, mesmo sem enxergar o caminho inteiro.' },
+    storm: { title: 'Existe intensidade no ar.', name: 'tempestade', icon: 'ϟ', text: 'Quando tudo parece forte demais, tente se dar espaço antes de exigir respostas.' }
+  };
+  const MOOD_WEATHER = { feliz:'sun', calmo:'breeze', cansado:'cloud', triste:'rain', confuso:'fog', ansioso:'fog', irritado:'storm' };
+  let creativeMuseumUrls = [];
+  let creativePastEntries = [];
+  let creativeConstellationItems = [];
+  let selectedInteriorWeather = 'cloud';
+  let deepWritingInterval = null;
+  let deepWritingSeconds = 0;
+
+  function creativeReadArray(key) {
+    try {
+      const value = JSON.parse(localStorage.getItem(key) || '[]');
+      return Array.isArray(value) ? value : [];
+    } catch (error) { return []; }
+  }
+  function creativeMakeId() {
+    return (window.crypto && typeof crypto.randomUUID === 'function')
+      ? crypto.randomUUID()
+      : String(Date.now()) + '-' + Math.random().toString(16).slice(2);
+  }
+  function creativeDate(value, includeTime) {
+    const date = new Date(Number(value) || value || Date.now());
+    const options = includeTime
+      ? { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }
+      : { day:'2-digit', month:'long', year:'numeric' };
+    return new Intl.DateTimeFormat('pt-BR', options).format(date);
+  }
+  function creativeToday() {
+    const now = new Date();
+    return now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+  }
+  function creativeNode(tag, className, value) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (value !== undefined && value !== null) node.textContent = String(value);
+    return node;
+  }
+
+  async function renderConstellation() {
+    const field = $('#constellationStars');
+    const filter = $('#constellationTagFilter');
+    const count = $('#constellationCount');
+    if (!field || !filter || !count) return;
+    field.replaceChildren();
+    let diary = [];
+    try { diary = await dbAll(); }
+    catch (error) { count.textContent = 'Não foi possível ler o diário neste navegador.'; return; }
+    const tags = new Set();
+    diary.forEach((entry) => (Array.isArray(entry.tags) ? entry.tags : []).forEach((tag) => { if (tag) tags.add(String(tag).replace(/^#/, '').trim()); }));
+    const previous = filter.value || 'all';
+    filter.replaceChildren(new Option('todas as memórias', 'all'));
+    Array.from(tags).sort((a,b) => a.localeCompare(b, 'pt-BR')).forEach((tag) => filter.appendChild(new Option('#' + tag, tag)));
+    filter.value = Array.from(tags).includes(previous) ? previous : 'all';
+
+    const memories = diary.map((entry) => ({
+      key:'entry:' + entry.id, id:entry.id, kind:'registro',
+      title:entry.title || 'Um registro sem título',
+      text:entry.text || (entry.media && entry.media.length ? 'Você guardou um arquivo neste momento.' : ''),
+      date:Number(entry.createdAt) || Date.now(),
+      tags:Array.isArray(entry.tags) ? entry.tags.filter(Boolean) : []
+    }));
+    creativeReadArray(MOOD_KEY).forEach((item) => {
+      const mood = MOODS[item.mood];
+      if (!mood) return;
+      memories.push({
+        key:'mood:' + item.id, id:item.id, kind:'sentimento',
+        title:'Como eu estava: ' + mood.label,
+        text:(item.note || '').trim() || 'Você registrou esse sentimento, mesmo que não tenha encontrado palavras para ele.',
+        date:Number(item.createdAt) || Date.now(), tags:[]
+      });
+    });
+    const chosenTag = filter.value;
+    creativeConstellationItems = memories.filter((item) => chosenTag === 'all' || item.tags.some((tag) => String(tag).replace(/^#/, '').trim() === chosenTag)).sort((a,b) => b.date - a.date);
+    count.textContent = creativeConstellationItems.length + (creativeConstellationItems.length === 1 ? ' estrela para revisitar' : ' estrelas para revisitar');
+    if (!creativeConstellationItems.length) {
+      const empty = creativeNode('p','constellation-empty', chosenTag === 'all' ? 'As memórias que você guardar aparecerão aqui como estrelas.' : 'Ainda não há memórias com essa etiqueta.');
+      field.appendChild(empty);
+      const detail = $('#constellationDetail');
+      if (detail) { detail.replaceChildren(creativeNode('p','eyebrow','uma lembrança por vez'), creativeNode('h2','', 'Ainda não há estrelas por aqui.'), creativeNode('p','', 'Você pode voltar depois, sem pressa.')); }
+      return;
+    }
+    creativeConstellationItems.forEach((item, index) => {
+      const star = creativeNode('button','constellation-star', '✦');
+      const seed = index + 1;
+      const x = 7 + ((seed * 37 + Math.floor(item.date / 86400000) % 29) % 86);
+      const y = 10 + ((seed * 53 + Math.floor(item.date / 3600000) % 31) % 76);
+      star.style.setProperty('--star-x', x + '%');
+      star.style.setProperty('--star-y', y + '%');
+      star.style.setProperty('--star-delay', (index % 9) * 0.16 + 's');
+      star.dataset.memoryKey = item.key;
+      star.setAttribute('aria-label', item.title + ', ' + creativeDate(item.date, false));
+      star.title = item.title + ' · ' + creativeDate(item.date, false);
+      if (item.tags.length) star.dataset.tag = item.tags[0];
+      field.appendChild(star);
+    });
+  }
+  function showConstellationMemory(memory) {
+    const detail = $('#constellationDetail');
+    if (!detail || !memory) return;
+    detail.replaceChildren();
+    detail.appendChild(creativeNode('p','eyebrow', memory.kind === 'sentimento' ? 'um sentimento registrado' : 'um fragmento da sua história'));
+    detail.appendChild(creativeNode('h2','',memory.title));
+    detail.appendChild(creativeNode('p','constellation-date',creativeDate(memory.date,true)));
+    detail.appendChild(creativeNode('p','constellation-memory-text',memory.text || 'Você guardou esse momento sem escrever um texto.'));
+    if (memory.tags && memory.tags.length) {
+      const tags = creativeNode('p','creative-tags',memory.tags.map((tag) => '#' + tag).join('  '));
+      detail.appendChild(tags);
+    }
+    const go = creativeNode('button','tool-button','abrir meus registros');
+    go.type = 'button';
+    go.addEventListener('click', () => {
+      const nav = document.querySelector('.nav-link[data-section="historias"]');
+      if (nav) nav.click();
+    });
+    detail.appendChild(go);
+  }
+
+  async function renderPastMemory() {
+    const select = $('#pastEntrySelector');
+    if (!select) return;
+    const previous = select.value;
+    try { creativePastEntries = await dbAll(); }
+    catch (error) { creativePastEntries = []; }
+    select.replaceChildren();
+    if (!creativePastEntries.length) {
+      select.appendChild(new Option('nenhum registro salvo ainda', ''));
+      showPastMemory('');
+      $('#pastReflectionStatus').textContent = 'Guarde primeiro um registro na área “desabafar”; ele poderá ser escolhido aqui depois.';
+      return;
+    }
+    creativePastEntries.sort((a,b) => (Number(a.createdAt) || 0) - (Number(b.createdAt) || 0));
+    creativePastEntries.forEach((entry) => {
+      const title = entry.title || (entry.text || '').trim().slice(0, 54) || 'registro sem título';
+      select.appendChild(new Option(creativeDate(entry.createdAt, false) + ' — ' + title, entry.id));
+    });
+    const valid = creativePastEntries.some((entry) => String(entry.id) === previous);
+    select.value = valid ? previous : String(creativePastEntries[0].id);
+    showPastMemory(select.value);
+  }
+  function showPastMemory(id) {
+    const card = $('#pastMemoryCard');
+    if (!card) return;
+    const entry = creativePastEntries.find((item) => String(item.id) === String(id));
+    card.replaceChildren();
+    card.appendChild(creativeNode('p','eyebrow','o que você viveu'));
+    if (!entry) {
+      card.appendChild(creativeNode('h2','', 'Ainda não há registro para reler.'));
+      card.appendChild(creativeNode('p','', 'Quando guardar um momento no diário, ele poderá ser escolhido aqui.'));
+      return;
+    }
+    card.appendChild(creativeNode('h2','',entry.title || 'Um registro sem título'));
+    card.appendChild(creativeNode('p','past-memory-date',creativeDate(entry.createdAt,true)));
+    card.appendChild(creativeNode('p','past-memory-text',entry.text || 'Esse momento ficou guardado sem palavras.'));
+    if (Array.isArray(entry.tags) && entry.tags.length) card.appendChild(creativeNode('p','creative-tags',entry.tags.map((tag) => '#' + tag).join('  ')));
+  }
+  async function savePastReflection() {
+    const status = $('#pastReflectionStatus');
+    const id = $('#pastEntrySelector').value;
+    const entry = creativePastEntries.find((item) => String(item.id) === String(id));
+    const reflection = $('#pastReflectionText').value.trim();
+    if (!entry) { status.textContent = 'Escolha um registro antigo antes de responder.'; return; }
+    if (!reflection) { status.textContent = 'Escreva ao menos uma frase para sua versão de antes.'; $('#pastReflectionText').focus(); return; }
+    const sourceDate = creativeDate(entry.createdAt,true);
+    const text = 'Uma resposta para um registro de ' + sourceDate + ':\n\n' + (entry.text || entry.title || 'Um momento que guardei.') + '\n\nO que eu diria hoje:\n' + reflection;
+    try {
+      await dbPut({ id:creativeMakeId(), title:'Uma resposta para meu eu do passado', text:text, tags:['eu-do-passado'], createdAt:Date.now(), media:[], sourceEntryId:entry.id });
+      status.textContent = 'Sua resposta foi guardada no diário.';
+      $('#pastReflectionText').value = '';
+    } catch (error) { status.textContent = 'Não foi possível guardar esta resposta. Tente novamente.'; }
+  }
+
+  function readMuseumState() {
+    let raw = {};
+    try { raw = JSON.parse(localStorage.getItem(MUSEUM_KEY) || '{}') || {}; } catch (error) { raw = {}; }
+    const collections = Array.isArray(raw.collections) ? raw.collections.filter((name) => typeof name === 'string' && name.trim()) : DEFAULT_COLLECTIONS.slice();
+    return {
+      collections:Array.from(new Set(collections)),
+      assignments:raw.assignments && typeof raw.assignments === 'object' ? raw.assignments : {}
+    };
+  }
+  function writeMuseumState(state) {
+    localStorage.setItem(MUSEUM_KEY, JSON.stringify(state));
+  }
+  function cleanupMuseumUrls() {
+    creativeMuseumUrls.forEach((url) => URL.revokeObjectURL(url));
+    creativeMuseumUrls = [];
+  }
+  function updateMuseumCollectionControls(state) {
+    const collectionFilter = $('#museumCollectionFilter');
+    const previous = collectionFilter.value || 'all';
+    collectionFilter.replaceChildren(new Option('todas as coleções','all'));
+    state.collections.forEach((name) => collectionFilter.appendChild(new Option(name,name)));
+    collectionFilter.value = state.collections.includes(previous) ? previous : 'all';
+    const chips = $('#museumCollections');
+    chips.replaceChildren();
+    state.collections.forEach((name) => {
+      const chip = creativeNode('span','museum-collection-chip','◇ ' + name);
+      chips.appendChild(chip);
+    });
+  }
+  async function renderMuseum() {
+    const container = $('#museumItems');
+    const empty = $('#museumEmpty');
+    if (!container || !empty) return;
+    cleanupMuseumUrls();
+    container.replaceChildren();
+    let entries = [];
+    try { entries = await dbAll(); } catch (error) {
+      $('#museumStatus').textContent = 'Não foi possível abrir os registros deste dispositivo.';
+      empty.classList.remove('hidden');
+      return;
+    }
+    const museum = readMuseumState();
+    updateMuseumCollectionControls(museum);
+    const type = $('#museumTypeFilter').value || 'all';
+    const collection = $('#museumCollectionFilter').value || 'all';
+    const items = entries.filter((entry) => {
+      const media = Array.isArray(entry.media) ? entry.media : [];
+      const hasImage = media.some((item) => item.type === 'image');
+      const hasAudio = media.some((item) => item.type === 'audio');
+      const hasText = Boolean((entry.text || '').trim());
+      const typeMatch = type === 'all' || (type === 'image' && hasImage) || (type === 'audio' && hasAudio) || (type === 'text' && hasText);
+      const collectionMatch = collection === 'all' || museum.assignments[entry.id] === collection;
+      return typeMatch && collectionMatch;
+    });
+    $('#museumStatus').textContent = entries.length ? 'As memórias permanecem no armazenamento local deste navegador.' : 'Seu diário ainda não tem registros para organizar.';
+    empty.classList.toggle('hidden', items.length > 0);
+    if (!items.length) {
+      empty.querySelector('h3').textContent = entries.length ? 'Nenhum item neste recorte.' : 'Seu museu está começando.';
+      empty.querySelector('p').textContent = entries.length ? 'Mude os filtros ou atribua um registro a uma coleção.' : 'Guarde um texto, uma fotografia ou um áudio na área de desabafo; depois, ele poderá aparecer nesta galeria.';
+    }
+    items.forEach((entry) => {
+      const card = creativeNode('article','museum-memory glass-card');
+      const head = creativeNode('div','museum-memory-head');
+      const copy = creativeNode('div','');
+      copy.appendChild(creativeNode('p','eyebrow',creativeDate(entry.createdAt,false)));
+      copy.appendChild(creativeNode('h3','',entry.title || 'Um registro sem título'));
+      head.appendChild(copy);
+      const select = creativeNode('select','museum-assignment');
+      select.setAttribute('aria-label','Coleção deste registro');
+      select.dataset.museumAssign = entry.id;
+      select.appendChild(new Option('sem coleção',''));
+      museum.collections.forEach((name) => select.appendChild(new Option(name,name)));
+      select.value = museum.assignments[entry.id] || '';
+      head.appendChild(select);
+      card.appendChild(head);
+      if ((entry.text || '').trim()) card.appendChild(creativeNode('p','museum-memory-text',entry.text));
+      const mediaWrap = creativeNode('div','museum-memory-media');
+      (Array.isArray(entry.media) ? entry.media : []).forEach((media) => {
+        if (!media || !media.blob) return;
+        const itemWrap = creativeNode('div','museum-media-item');
+        const url = URL.createObjectURL(media.blob);
+        creativeMuseumUrls.push(url);
+        if (media.type === 'image') {
+          const image = creativeNode('img','', '');
+          image.src = url; image.alt = media.name || 'Fotografia guardada';
+          itemWrap.appendChild(image);
+        } else if (media.type === 'audio') {
+          const audio = document.createElement('audio');
+          audio.controls = true; audio.src = url; audio.preload = 'none';
+          itemWrap.appendChild(audio);
+        }
+        if (media.name) itemWrap.appendChild(creativeNode('p','museum-media-name',media.name));
+        mediaWrap.appendChild(itemWrap);
+      });
+      if (mediaWrap.childElementCount) card.appendChild(mediaWrap);
+      if (Array.isArray(entry.tags) && entry.tags.length) card.appendChild(creativeNode('p','creative-tags',entry.tags.map((tag) => '#' + tag).join('  ')));
+      container.appendChild(card);
+    });
+  }
+
+  function renderPersonalMessages() {
+    const list = $('#personalMessageList');
+    const empty = $('#personalMessageEmpty');
+    if (!list || !empty) return;
+    list.replaceChildren();
+    const messages = creativeReadArray(PERSONAL_MESSAGES_KEY).sort((a,b) => (Number(b.createdAt) || 0) - (Number(a.createdAt) || 0));
+    empty.classList.toggle('hidden', messages.length > 0);
+    messages.forEach((message) => {
+      const card = creativeNode('article','personal-message-card');
+      const header = creativeNode('div','personal-message-heading');
+      const text = creativeNode('div','');
+      text.appendChild(creativeNode('p','eyebrow',message.situationLabel || 'para um momento especial'));
+      text.appendChild(creativeNode('h3','',message.title || 'Uma mensagem para mim'));
+      header.appendChild(text);
+      const remove = creativeNode('button','message-delete','apagar');
+      remove.type = 'button'; remove.dataset.deletePersonalMessage = message.id;
+      remove.setAttribute('aria-label','Apagar mensagem ' + (message.title || 'sem título'));
+      header.appendChild(remove);
+      card.appendChild(header);
+      card.appendChild(creativeNode('p','personal-message-copy',message.body));
+      list.appendChild(card);
+    });
+  }
+  function savePersonalMessage(event) {
+    event.preventDefault();
+    const body = $('#personalMessageBody').value.trim();
+    if (!body) { $('#personalMessageStatus').textContent = 'Escreva o recado que gostaria de guardar.'; return; }
+    const select = $('#personalMessageSituation');
+    const situation = select.options[select.selectedIndex];
+    const items = creativeReadArray(PERSONAL_MESSAGES_KEY);
+    items.unshift({ id:creativeMakeId(), situation:select.value, situationLabel:situation ? situation.textContent : 'para mim', title:$('#personalMessageTitle').value.trim().slice(0,70), body:body.slice(0,1200), createdAt:Date.now() });
+    try {
+      localStorage.setItem(PERSONAL_MESSAGES_KEY, JSON.stringify(items.slice(0,300)));
+      $('#personalMessageTitle').value = '';
+      $('#personalMessageBody').value = '';
+      $('#personalMessageStatus').textContent = 'Seu recado ficou guardado neste navegador.';
+      renderPersonalMessages();
+    } catch (error) { $('#personalMessageStatus').textContent = 'Não foi possível guardar. Talvez o armazenamento esteja cheio.'; }
+  }
+  function showSurpriseMessage() {
+    const messages = creativeReadArray(PERSONAL_MESSAGES_KEY);
+    if (!messages.length) {
+      $('#messageSurpriseTitle').textContent = 'Deixe uma palavra sua para outro dia.';
+      $('#messageSurpriseBody').textContent = 'Quando você guardar mensagens, poderá sortear uma delas aqui.';
+      return;
+    }
+    const message = messages[Math.floor(Math.random() * messages.length)];
+    $('#messageSurpriseTitle').textContent = message.title || message.situationLabel || 'Uma mensagem para mim';
+    $('#messageSurpriseBody').textContent = message.body;
+  }
+
+  function readTodayWeather() {
+    return creativeReadArray(WEATHER_KEY).find((item) => item.date === creativeToday()) || null;
+  }
+  function recentMood() {
+    return creativeReadArray(MOOD_KEY).sort((a,b) => (Number(b.createdAt) || 0) - (Number(a.createdAt) || 0))[0] || null;
+  }
+  function setInteriorWeather(weather, focusNote) {
+    if (!WEATHER_INFO[weather]) return;
+    selectedInteriorWeather = weather;
+    $('#weatherOptions .weather-option').forEach((button) => {
+      const selected = button.dataset.weather === weather;
+      button.classList.toggle('is-selected', selected);
+      button.setAttribute('aria-pressed', String(selected));
+    });
+    const info = WEATHER_INFO[weather];
+    $('#weatherCurrentIcon').textContent = info.icon;
+    $('#weatherCurrentTitle').textContent = info.title;
+    $('#weatherCurrentText').textContent = info.text;
+    if (focusNote !== undefined) $('#weatherNote').value = focusNote;
+  }
+  function renderWeatherHistory() {
+    const list = $('#weatherHistory');
+    if (!list) return;
+    list.replaceChildren();
+    const history = creativeReadArray(WEATHER_KEY).sort((a,b) => String(b.date).localeCompare(String(a.date))).slice(0,12);
+    if (!history.length) {
+      list.appendChild(creativeNode('p','weather-history-empty','Seus climas aparecerão aqui quando você guardar o primeiro.'));
+      return;
+    }
+    history.forEach((item) => {
+      const info = WEATHER_INFO[item.weather] || WEATHER_INFO.cloud;
+      const row = creativeNode('article','weather-history-item');
+      row.appendChild(creativeNode('span','weather-history-icon',info.icon));
+      const details = creativeNode('div','');
+      details.appendChild(creativeNode('h3','',info.name + ' · ' + creativeDate(item.createdAt || item.date,false)));
+      if (item.note) details.appendChild(creativeNode('p','',item.note));
+      if (item.moodLabel) details.appendChild(creativeNode('small','', 'check-in: ' + item.moodLabel));
+      row.appendChild(details);
+      list.appendChild(row);
+    });
+  }
+  function renderWeather() {
+    const today = readTodayWeather();
+    const mood = recentMood();
+    const moodInfo = mood && MOODS[mood.mood] ? MOODS[mood.mood] : null;
+    const moodSuggested = moodInfo ? (MOOD_WEATHER[mood.mood] || 'cloud') : 'cloud';
+    const selected = today ? today.weather : moodSuggested;
+    const note = today ? today.note || '' : '';
+    setInteriorWeather(selected, note);
+    $('#weatherMoodLink').textContent = today
+      ? 'Clima escolhido por você hoje.' + (today.moodLabel ? ' Check-in relacionado: ' + today.moodLabel + '.' : '')
+      : (moodInfo ? 'Seu último check-in foi “' + moodInfo.label + '”. Esse sentimento pode lembrar um clima de ' + WEATHER_INFO[moodSuggested].name + ', mas a escolha é sempre sua.' : 'Você ainda não fez um check-in emocional. Escolha o símbolo que combina com seu dia.');
+    renderWeatherHistory();
+  }
+  function saveWeatherToday() {
+    const notes = $('#weatherNote').value.trim().slice(0,700);
+    const existing = creativeReadArray(WEATHER_KEY).filter((item) => item.date !== creativeToday());
+    const mood = recentMood();
+    const moodInfo = mood && MOODS[mood.mood] ? MOODS[mood.mood] : null;
+    existing.unshift({ id:creativeMakeId(), date:creativeToday(), weather:selectedInteriorWeather, note:notes, moodLabel:moodInfo ? moodInfo.label : '', createdAt:Date.now() });
+    try {
+      localStorage.setItem(WEATHER_KEY, JSON.stringify(existing.slice(0,365)));
+      $('#weatherStatus').textContent = 'O clima de hoje ficou guardado neste navegador.';
+      renderWeatherHistory();
+      $('#weatherMoodLink').textContent = 'Clima escolhido por você hoje.' + (moodInfo ? ' Check-in relacionado: ' + moodInfo.label + '.' : '');
+    } catch (error) { $('#weatherStatus').textContent = 'Não foi possível guardar esse clima neste navegador.'; }
+  }
+
+  function updateDeepWritingTimer() {
+    const seconds = Math.max(0, deepWritingSeconds);
+    const minutes = String(Math.floor(seconds / 60)).padStart(2,'0');
+    const rest = String(seconds % 60).padStart(2,'0');
+    $('#writingTimerDisplay').textContent = minutes + ':' + rest;
+  }
+  function stopDeepWritingTimer() {
+    if (deepWritingInterval) window.clearInterval(deepWritingInterval);
+    deepWritingInterval = null;
+  }
+  function startDeepWritingTimer() {
+    if (deepWritingInterval) { stopDeepWritingTimer(); $('#writingTimerStart').textContent = 'continuar'; return; }
+    if (deepWritingSeconds <= 0) deepWritingSeconds = Number($('#writingTimerLength').value || 5) * 60;
+    updateDeepWritingTimer();
+    $('#writingTimerStart').textContent = 'pausar';
+    deepWritingInterval = window.setInterval(() => {
+      deepWritingSeconds = Math.max(0, deepWritingSeconds - 1);
+      updateDeepWritingTimer();
+      if (deepWritingSeconds <= 0) {
+        stopDeepWritingTimer();
+        $('#writingTimerStart').textContent = 'começar de novo';
+        $('#deepWritingStatus').textContent = 'O tempo terminou. Você pode continuar escrevendo ou parar por aqui — sem obrigação.';
+      }
+    },1000);
+  }
+  function resetDeepWritingTimer() {
+    stopDeepWritingTimer();
+    deepWritingSeconds = Number($('#writingTimerLength').value || 5) * 60;
+    $('#writingTimerStart').textContent = 'começar';
+    updateDeepWritingTimer();
+  }
+  async function saveDeepWriting() {
+    const text = $('#deepWritingText').value.trim();
+    if (!text) { $('#deepWritingStatus').textContent = 'Escreva um pouco antes de guardar no diário.'; $('#deepWritingText').focus(); return; }
+    try {
+      await dbPut({ id:creativeMakeId(), title:'Escrita profunda', text:text, tags:['escrita-profunda'], createdAt:Date.now(), media:[] });
+      $('#deepWritingStatus').textContent = 'Seu texto foi guardado no diário. O rascunho continua aqui até você decidir limpá-lo.';
+    } catch (error) { $('#deepWritingStatus').textContent = 'Não foi possível guardar no diário. Tente novamente.'; }
+  }
+  function clearDeepWritingDraft() {
+    if (!$('#deepWritingText').value.trim()) {
+      localStorage.removeItem(DEEP_WRITING_DRAFT_KEY);
+      $('#deepWritingStatus').textContent = 'O rascunho está vazio.';
+      return;
+    }
+    if (!window.confirm('Quer apagar este rascunho deste dispositivo? Ele não poderá ser recuperado.')) return;
+    $('#deepWritingText').value = '';
+    localStorage.removeItem(DEEP_WRITING_DRAFT_KEY);
+    $('#deepWritingStatus').textContent = 'Rascunho apagado.';
+  }
+  function initCreativeFeatures() {
+    const stars = $('#constellationStars');
+    if (stars) stars.addEventListener('click', (event) => {
+      const star = event.target.closest('[data-memory-key]');
+      if (!star) return;
+      const item = creativeConstellationItems.find((memory) => memory.key === star.dataset.memoryKey);
+      showConstellationMemory(item);
+    });
+    $('#constellationTagFilter')?.addEventListener('change', renderConstellation);
+
+    $('#pastEntrySelector')?.addEventListener('change', (event) => showPastMemory(event.target.value));
+    $('#savePastReflectionButton')?.addEventListener('click', savePastReflection);
+
+    $('#museumCollectionForm')?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const field = $('#museumCollectionName');
+      const name = field.value.trim().slice(0,40);
+      if (!name) { $('#museumStatus').textContent = 'Dê um nome para essa coleção.'; field.focus(); return; }
+      const state = readMuseumState();
+      if (state.collections.some((item) => item.toLocaleLowerCase('pt-BR') === name.toLocaleLowerCase('pt-BR'))) {
+        $('#museumStatus').textContent = 'Essa coleção já existe.';
+        return;
+      }
+      state.collections.push(name);
+      try {
+        writeMuseumState(state);
+        field.value = '';
+        $('#museumStatus').textContent = 'Coleção criada. Você pode atribuir registros a ela.';
+        renderMuseum();
+      } catch (error) { $('#museumStatus').textContent = 'Não foi possível guardar essa coleção.'; }
+    });
+    $('#museumTypeFilter')?.addEventListener('change', renderMuseum);
+    $('#museumCollectionFilter')?.addEventListener('change', renderMuseum);
+    $('#museumItems')?.addEventListener('change', (event) => {
+      const select = event.target.closest('[data-museum-assign]');
+      if (!select) return;
+      const state = readMuseumState();
+      if (select.value) state.assignments[select.dataset.museumAssign] = select.value;
+      else delete state.assignments[select.dataset.museumAssign];
+      try { writeMuseumState(state); $('#museumStatus').textContent = 'Coleção atualizada.'; }
+      catch (error) { $('#museumStatus').textContent = 'Não foi possível atualizar a coleção.'; }
+    });
+
+    $('#personalMessageForm')?.addEventListener('submit', savePersonalMessage);
+    $('#surpriseMessageButton')?.addEventListener('click', showSurpriseMessage);
+    $('#personalMessageList')?.addEventListener('click', (event) => {
+      const remove = event.target.closest('[data-delete-personal-message]');
+      if (!remove) return;
+      const remaining = creativeReadArray(PERSONAL_MESSAGES_KEY).filter((item) => String(item.id) !== remove.dataset.deletePersonalMessage);
+      try { localStorage.setItem(PERSONAL_MESSAGES_KEY, JSON.stringify(remaining)); renderPersonalMessages(); $('#personalMessageStatus').textContent = 'Mensagem apagada.'; }
+      catch (error) { $('#personalMessageStatus').textContent = 'Não foi possível apagar essa mensagem.'; }
+    });
+
+    $('#weatherOptions .weather-option').forEach((button) => button.addEventListener('click', () => setInteriorWeather(button.dataset.weather)));
+    $('#saveWeatherButton')?.addEventListener('click', saveWeatherToday);
+
+    $('#deepWritingText')?.addEventListener('input', () => {
+      try { localStorage.setItem(DEEP_WRITING_DRAFT_KEY, $('#deepWritingText').value); $('#deepWritingStatus').textContent = 'Rascunho salvo automaticamente neste navegador.'; }
+      catch (error) { $('#deepWritingStatus').textContent = 'Não foi possível salvar automaticamente. Copie seu texto por segurança.'; }
+    });
+    $('#writingFocusButton')?.addEventListener('click', () => {
+      document.body.classList.add('writing-focus');
+      $('#deepWritingText').focus();
+    });
+    $('#exitWritingFocusButton')?.addEventListener('click', () => document.body.classList.remove('writing-focus'));
+    $('#writingTimerStart')?.addEventListener('click', startDeepWritingTimer);
+    $('#writingTimerReset')?.addEventListener('click', resetDeepWritingTimer);
+    $('#writingTimerLength')?.addEventListener('change', resetDeepWritingTimer);
+    $('#saveDeepWritingButton')?.addEventListener('click', saveDeepWriting);
+    $('#clearDeepWritingDraftButton')?.addEventListener('click', clearDeepWritingDraft);
+    $('#deepWritingText').value = localStorage.getItem(DEEP_WRITING_DRAFT_KEY) || '';
+    resetDeepWritingTimer();
+    renderPersonalMessages();
+  }
+
   function initFeatures() {
     if (!$('#capsula')) return;
     setDefaultCapsuleDate();
@@ -952,11 +1480,25 @@
       if (button.dataset.section === 'capsula') renderCapsules();
       if (button.dataset.section === 'linha-do-tempo') renderTimeline();
       if (button.dataset.section === 'kit') renderKit();
+      if (button.dataset.section === 'constelacao') renderConstellation();
+      if (button.dataset.section === 'eu-passado') renderPastMemory();
+      if (button.dataset.section === 'museu') renderMuseum();
+      if (button.dataset.section === 'mensagens') renderPersonalMessages();
+      if (button.dataset.section === 'clima') renderWeather();
+      if (button.dataset.section === 'escrita') { document.body.classList.remove('writing-focus'); if (!deepWritingSeconds) resetDeepWritingTimer(); }
+      if (button.dataset.section === 'constelacao') renderConstellation();
+      if (button.dataset.section === 'eu-passado') renderPastMemory();
+      if (button.dataset.section === 'museu') renderMuseum();
+      if (button.dataset.section === 'mensagens') renderPersonalMessages();
+      if (button.dataset.section === 'clima') renderWeather();
+      if (button.dataset.section === 'escrita') { document.body.classList.remove('writing-focus'); if (!deepWritingSeconds) resetDeepWritingTimer(); }
       if (button.dataset.section !== 'refugio' && playing) stopAmbientSound(true);
     }));
     document.addEventListener('visibilitychange', () => {
       if (document.hidden && playing) stopAmbientSound(true);
     });
+
+    initCreativeFeatures();
 
     const pinConfig = getPinConfig();
     if (pinConfig && sessionStorage.getItem(UNLOCKED_KEY) !== '1') {

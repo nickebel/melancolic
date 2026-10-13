@@ -112,3 +112,109 @@
 .timeline-filters { grid-template-columns: .8fr 1.05fr .9fr 1.2fr 1.1fr auto; }
 @media (max-width: 1000px) { .timeline-filters { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 680px) { .timeline-filters { grid-template-columns: 1fr; } }
+
+
+/* As seis áreas novas: constelação, eu do passado, museu, recados, clima e foco. */
+.creative-card { padding: clamp(18px, 3vw, 30px); border: 1px solid var(--line); border-radius: var(--radius); background: var(--glass); box-shadow: var(--shadow); }
+.creative-toolbar { display:flex; align-items:flex-end; justify-content:space-between; gap:18px; flex-wrap:wrap; margin-bottom:22px; }
+.creative-toolbar .field { flex:1 1 230px; }
+.creative-toolbar .feature-status { padding-bottom:10px; }
+.creative-actions { display:flex; gap:14px; align-items:center; flex-wrap:wrap; margin-top:16px; }
+.creative-actions .feature-status { flex:1 1 220px; }
+.creative-tags { margin:16px 0 0; color:#96b7b0; font-size:12px; line-height:1.8; overflow-wrap:anywhere; }
+.constellation-stars { min-height:360px; position:relative; isolation:isolate; overflow:hidden; border:1px solid rgba(180,215,214,.12); border-radius:22px; background:radial-gradient(ellipse at 50% 50%,rgba(44,82,91,.28),rgba(3,13,17,.9) 72%),linear-gradient(145deg,rgba(18,39,45,.62),rgba(4,13,16,.92)); }
+.constellation-stars::before,.constellation-stars::after { content:""; position:absolute; inset:0; pointer-events:none; z-index:-1; background-image:radial-gradient(circle,rgba(212,235,224,.65) 0 1px,transparent 1.6px),radial-gradient(circle,rgba(140,183,179,.5) 0 1px,transparent 1.7px); background-size:83px 91px,127px 119px; background-position:13px 20px,43px 61px; opacity:.32; }
+.constellation-star { position:absolute; left:var(--star-x); top:var(--star-y); transform:translate(-50%,-50%); width:38px; height:38px; border:1px solid rgba(197,230,215,.22); border-radius:50%; color:#dcebdc; background:rgba(97,143,139,.18); font-size:20px; line-height:1; cursor:pointer; box-shadow:0 0 0 5px rgba(147,187,176,.025),0 0 22px rgba(148,196,185,.12); animation:constellation-glow 3.8s ease-in-out var(--star-delay) infinite alternate; transition:transform .2s,border-color .2s,background .2s; }
+.constellation-star:hover,.constellation-star:focus-visible { transform:translate(-50%,-50%) scale(1.25); border-color:rgba(210,238,224,.8); background:rgba(132,177,163,.3); outline:none; }
+.constellation-star:nth-child(3n) { color:#c3d3ef; }
+.constellation-star:nth-child(4n) { color:#dbc7e8; }
+.constellation-empty { position:absolute; inset:0; display:grid; place-items:center; padding:25px; color:var(--muted); text-align:center; font-size:14px; }
+.constellation-detail,.past-memory-card { margin-top:20px; padding:24px; border:1px solid rgba(191,221,219,.1); border-radius:18px; background:rgba(3,15,18,.45); }
+.constellation-detail h2,.past-memory-card h2 { margin:5px 0 9px; font:600 clamp(20px,3vw,28px)/1.3 'Manrope',sans-serif; }
+.constellation-date,.past-memory-date { color:var(--muted-2); font-size:11px; }
+.constellation-memory-text,.past-memory-text { white-space:pre-wrap; overflow-wrap:anywhere; color:#bed0cb; line-height:1.9; font-size:14px; }
+.past-memory-card { margin:20px 0; }
+.past-memory-card .eyebrow,.constellation-detail .eyebrow { margin-top:0; }
+.museum-create-row { display:flex; align-items:flex-end; gap:14px; flex-wrap:wrap; }
+.museum-create-row .field { flex:1 1 240px; }
+.museum-create-row .tool-button { min-height:46px; }
+.museum-filters { margin-top:22px; }
+.museum-collection-chips { display:flex; flex-wrap:wrap; gap:8px; margin:15px 0 22px; }
+.museum-collection-chip { padding:8px 11px; border:1px solid rgba(177,211,202,.16); border-radius:999px; color:#9cbab0; background:rgba(100,146,131,.07); font-size:10px; }
+.museum-items { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+.museum-memory { min-width:0; padding:20px; border-radius:18px; background:rgba(5,19,23,.66); border:1px solid rgba(191,221,219,.1); }
+.museum-memory-head,.personal-message-heading { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+.museum-memory-head h3,.personal-message-heading h3 { margin:0; overflow-wrap:anywhere; color:#d5e3df; font:600 17px/1.4 'Manrope',sans-serif; }
+.museum-assignment { max-width:145px; min-width:105px; padding:8px; color:var(--ink); background:#11252a; border:1px solid var(--line); border-radius:10px; font-size:11px; }
+.museum-memory-text { margin:17px 0; max-height:220px; overflow:auto; color:#aebfbb; white-space:pre-wrap; overflow-wrap:anywhere; font-size:13px; line-height:1.8; }
+.museum-memory-media { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:10px; margin-top:15px; }
+.museum-media-item { min-width:0; }
+.museum-media-item img { display:block; width:100%; max-height:260px; object-fit:cover; border-radius:12px; border:1px solid var(--line); }
+.museum-media-item audio { width:100%; min-width:0; }
+.museum-media-name { color:var(--muted-2); font-size:10px; overflow-wrap:anywhere; }
+.message-surprise { margin-bottom:26px; padding:24px; border:1px solid rgba(174,212,201,.14); border-radius:18px; background:radial-gradient(circle at 10% 0%,rgba(69,118,111,.16),transparent 55%),rgba(5,19,22,.5); }
+.message-surprise h2 { margin:0 0 10px; font:600 clamp(20px,3vw,28px)/1.35 'Manrope',sans-serif; color:#d9e7e0; }
+.message-surprise > p:not(.eyebrow) { color:#b2c5be; white-space:pre-wrap; overflow-wrap:anywhere; font-size:14px; line-height:1.9; }
+.creative-form { display:grid; gap:15px; padding-bottom:22px; border-bottom:1px solid var(--line); }
+.personal-message-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:24px; }
+.personal-message-card { min-width:0; padding:19px; border:1px solid rgba(191,221,219,.1); border-radius:16px; background:rgba(5,19,23,.55); }
+.personal-message-copy { color:#b7c9c2; font-size:13px; line-height:1.9; white-space:pre-wrap; overflow-wrap:anywhere; }
+.message-delete { flex:0 0 auto; padding:7px 10px; border:1px solid rgba(198,154,148,.18); border-radius:999px; color:#c4a19b; background:transparent; cursor:pointer; font-size:10px; }
+.weather-current { padding:12px 5px 24px; text-align:center; }
+.weather-current-icon { color:#c0dbcc; font:normal 76px/1.2 Georgia,serif; text-shadow:0 0 35px rgba(149,192,177,.24); }
+.weather-current h2 { margin:8px 0; color:#d6e5df; font:600 clamp(24px,4vw,34px)/1.3 'Manrope',sans-serif; }
+.weather-current > p:not(.eyebrow) { max-width:600px; margin:0 auto 12px; color:#a9bdb6; line-height:1.8; }
+.weather-current .feature-status { max-width:750px; }
+.weather-options { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:11px; margin:12px 0 26px; }
+.weather-option { display:flex; min-height:130px; flex-direction:column; align-items:center; justify-content:center; gap:7px; padding:16px 10px; border:1px solid rgba(185,218,208,.12); border-radius:16px; color:#b8cbc4; background:rgba(4,17,21,.6); cursor:pointer; transition:border-color .2s,background .2s,transform .2s; }
+.weather-option > span { color:#bad8cc; font:normal 28px/1.2 Georgia,serif; }
+.weather-option strong { font:600 13px 'Manrope',sans-serif; }
+.weather-option small { color:var(--muted-2); text-align:center; line-height:1.5; font-size:10px; }
+.weather-option:hover { transform:translateY(-2px); border-color:rgba(173,208,197,.32); }
+.weather-option.is-selected { border-color:rgba(165,207,187,.58); background:rgba(83,127,108,.16); box-shadow:0 0 0 3px rgba(110,165,137,.06); }
+.weather-history-heading { margin-top:34px; }
+.weather-history { display:grid; gap:9px; margin-top:15px; }
+.weather-history-item { display:flex; align-items:flex-start; gap:14px; padding:16px; border:1px solid var(--line); border-radius:14px; background:rgba(4,17,20,.48); }
+.weather-history-icon { flex:0 0 38px; color:#b2d1c3; text-align:center; font:normal 25px Georgia,serif; }
+.weather-history-item h3 { margin:0 0 5px; color:#cfe0d8; font:600 13px 'Manrope',sans-serif; }
+.weather-history-item p,.weather-history-item small { display:block; margin:5px 0 0; color:#94aba2; font-size:11px; line-height:1.7; white-space:pre-wrap; overflow-wrap:anywhere; }
+.weather-history-empty { padding:20px; color:var(--muted-2); text-align:center; }
+.writing-shell { max-width:900px; }
+.writing-header { display:flex; align-items:flex-start; justify-content:space-between; gap:20px; margin:12px 0 35px; }
+.writing-header h1 { margin:0; font:500 clamp(38px,6vw,64px)/1.06 'Manrope',sans-serif; letter-spacing:-.05em; }
+.writing-header h1 em { color:#8ea9a5; font-style:normal; }
+.writing-header > div > p:last-child { max-width:620px; color:#a7b9b8; font-size:14px; line-height:1.85; }
+.writing-card { padding:clamp(18px,4vw,36px); border:1px solid rgba(195,220,217,.11); border-radius:24px; background:rgba(5,18,22,.67); box-shadow:var(--shadow); }
+.writing-tools { display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:20px; padding-bottom:24px; margin-bottom:22px; border-bottom:1px solid var(--line); }
+.writing-tools .field { flex:0 1 220px; }
+.writing-timer { display:flex; align-items:center; gap:17px; }
+.writing-timer > span { color:#d0e2d8; font:500 30px/1 'Manrope',sans-serif; font-variant-numeric:tabular-nums; }
+.writing-timer-actions { display:flex; gap:8px; flex-wrap:wrap; }
+#deepWritingText { width:100%; min-height:350px; padding:22px 0; border:0; border-radius:0; outline:none; resize:vertical; color:#d9e6df; background:transparent; font:400 clamp(17px,2.2vw,21px)/1.95 'DM Sans',sans-serif; box-shadow:none; }
+#deepWritingText::placeholder { color:#68817a; }
+.writing-footer { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:15px; padding-top:18px; border-top:1px solid var(--line); }
+.writing-footer .creative-actions { margin:0; }
+body.writing-focus { overflow-x:hidden; }
+body.writing-focus .topbar,body.writing-focus > .footer { display:none !important; }
+body.writing-focus #escrita { width:min(940px,calc(100% - 28px)); padding-top:26px; }
+body.writing-focus .writing-header { margin-top:4px; }
+body.writing-focus .writing-header h1 { font-size:clamp(32px,5vw,52px); }
+@keyframes constellation-glow { from { opacity:.72; box-shadow:0 0 0 3px rgba(147,187,176,.02),0 0 14px rgba(148,196,185,.08); } to { opacity:1; box-shadow:0 0 0 7px rgba(147,187,176,.045),0 0 30px rgba(148,196,185,.2); } }
+@media (max-width:800px) {
+  .museum-items,.personal-message-list { grid-template-columns:1fr; }
+  .museum-memory-head { flex-direction:column; }
+  .museum-assignment { max-width:100%; width:100%; }
+  .writing-header { flex-direction:column; }
+  .writing-tools { align-items:stretch; flex-direction:column; }
+  .writing-timer { justify-content:space-between; flex-wrap:wrap; }
+}
+@media (max-width:580px) {
+  .constellation-stars { min-height:320px; }
+  .constellation-star { width:34px; height:34px; }
+  .weather-options { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .creative-actions { align-items:stretch; flex-direction:column; }
+  .creative-actions .save-button,.creative-actions .tool-button { width:100%; justify-content:center; }
+  .weather-option { min-height:115px; }
+  .writing-footer { align-items:stretch; flex-direction:column; }
+  .writing-footer .creative-actions { width:100%; }
+}
