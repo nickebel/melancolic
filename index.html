@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0c1b20">
-  <meta name="description" content="Um espaço íntimo e silencioso para escrever, guardar fotos, acompanhar sentimentos e respirar com calma.">
+  <meta name="description" content="Um espaço íntimo para escrever, guardar memórias, criar cartas para o futuro, respirar e encontrar uma atmosfera tranquila.">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,
 <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
   <rect width='64' height='64' rx='14' fill='%23282B4A'/>
@@ -19,6 +19,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="mood.css">
+  <link rel="stylesheet" href="features.css">
 </head>
 <body>
   <div class="background" aria-hidden="true"></div>
@@ -36,6 +37,9 @@
       <button class="nav-link" data-section="pausa" type="button">minha pausa</button>
       <button class="nav-link" data-section="historias" type="button">meus registros</button>
       <button class="nav-link" data-section="galeria" type="button">fotos & sons</button>
+      <button class="nav-link" data-section="capsula" type="button">cápsula do tempo</button>
+      <button class="nav-link" data-section="refugio" type="button">refúgio sensorial</button>
+      <button class="nav-link" data-section="linha-do-tempo" type="button">linha do tempo</button>
     </nav>
     <div class="privacy-pill" title="Os dados deste site ficam neste navegador">
       <span class="dot"></span>
@@ -216,6 +220,93 @@
     </div>
   </section>
 
+  <section id="capsula" class="page secondary-page hidden-section">
+    <div class="section-shell extras-shell">
+      <header class="extras-intro">
+        <p class="eyebrow">cartas para o futuro</p>
+        <h1>Uma mensagem para <em>a pessoa que você será.</em></h1>
+        <p>Escreva para si mesmo de outro momento da vida. A carta fica fechada até a data que você escolher e estará esperando por você quando voltar ao site.</p>
+      </header>
+      <section class="glass-card extra-card" aria-labelledby="capsuleFormTitle">
+        <div class="section-heading">
+          <div><p class="eyebrow">uma promessa gentil</p><h2 id="capsuleFormTitle">O que você quer deixar guardado?</h2></div>
+        </div>
+        <div class="field-row">
+          <label class="field grow" for="capsuleTitle"><span>título <small>(opcional)</small></span><input id="capsuleTitle" type="text" maxlength="100" placeholder="ex.: para quando eu precisar lembrar" autocomplete="off"></label>
+          <label class="field capsule-date-field" for="capsuleDate"><span>abrir em</span><input id="capsuleDate" type="date" required></label>
+        </div>
+        <label class="field" for="capsuleText"><span>sua carta</span><textarea id="capsuleText" rows="7" maxlength="8000" placeholder="Como você está agora? O que gostaria que seu eu do futuro lembrasse? O que espera que tenha mudado — ou continuado igual?"></textarea></label>
+        <div class="extra-action-row"><p id="capsuleStatus" class="feature-status" role="status" aria-live="polite"></p><button id="saveCapsuleButton" class="save-button" type="button">fechar minha carta</button></div>
+        <p class="feature-footnote">Suas cartas ficam salvas apenas neste navegador e dispositivo. Elas não são enviadas para um servidor nem criptografadas.</p>
+      </section>
+      <section class="extra-list-section" aria-labelledby="capsuleListTitle">
+        <div class="page-heading"><div><p class="eyebrow">palavras esperando pelo tempo</p><h2 id="capsuleListTitle">Minhas cápsulas</h2><p>Cartas fechadas, cartas prontas e lembranças que você já abriu.</p></div><div id="capsuleCount" class="stats">0 cartas</div></div>
+        <div id="capsuleList" class="capsule-list"></div>
+        <div id="emptyCapsules" class="empty-state"><div class="empty-icon">✉</div><h3>Uma carta pode começar aqui.</h3><p>Escreva algo para o seu futuro e escolha o dia em que deseja reler.</p></div>
+      </section>
+    </div>
+  </section>
+
+  <section id="refugio" class="page secondary-page hidden-section">
+    <div class="section-shell extras-shell">
+      <header class="extras-intro">
+        <p class="eyebrow">um lugar para pousar</p>
+        <h1>Escolha a atmosfera <em>de que você precisa.</em></h1>
+        <p>Uma chuva distante, o balanço do mar ou o vento passando pelas árvores. Monte um pequeno ambiente para escrever, ler ou apenas ficar em silêncio.</p>
+      </header>
+      <section class="refuge-layout">
+        <div class="refuge-scene" id="refugeScene" data-scene="night" aria-live="polite">
+          <div class="refuge-moon" aria-hidden="true">◔</div>
+          <div class="refuge-scene-copy"><p class="eyebrow">seu pequeno refúgio</p><h2 id="refugeSceneTitle">Noite tranquila</h2><p id="refugeSceneDescription">Um céu escuro, luz suave e espaço para respirar.</p></div>
+          <div class="refuge-scene-horizon" aria-hidden="true"></div>
+        </div>
+        <div class="glass-card extra-card refuge-controls">
+          <p class="eyebrow">mude o cenário</p>
+          <h2>Que lugar combina com agora?</h2>
+          <div class="scene-options" id="sceneOptions" role="group" aria-label="Escolha o cenário visual">
+            <button type="button" class="scene-option is-active" data-scene="night" aria-pressed="true"><span aria-hidden="true">☾</span><span>noite</span></button>
+            <button type="button" class="scene-option" data-scene="sea" aria-pressed="false"><span aria-hidden="true">≈</span><span>mar</span></button>
+            <button type="button" class="scene-option" data-scene="mist" aria-pressed="false"><span aria-hidden="true">☁</span><span>névoa</span></button>
+            <button type="button" class="scene-option" data-scene="forest" aria-pressed="false"><span aria-hidden="true">♧</span><span>floresta</span></button>
+          </div>
+          <div class="extra-divider"></div>
+          <p class="eyebrow">escolha o som</p>
+          <h2>O que você quer ouvir?</h2>
+          <div class="ambience-options" id="ambienceOptions" role="group" aria-label="Escolha o som ambiente">
+            <button type="button" class="ambience-option is-active" data-ambience="rain" aria-pressed="true"><span aria-hidden="true">☂</span><strong>chuva</strong><small>gotas constantes</small></button>
+            <button type="button" class="ambience-option" data-ambience="ocean" aria-pressed="false"><span aria-hidden="true">≈</span><strong>mar</strong><small>ondas lentas</small></button>
+            <button type="button" class="ambience-option" data-ambience="wind" aria-pressed="false"><span aria-hidden="true">〰</span><strong>vento</strong><small>brisa suave</small></button>
+            <button type="button" class="ambience-option" data-ambience="forest" aria-pressed="false"><span aria-hidden="true">♧</span><strong>floresta</strong><small>ruído natural</small></button>
+          </div>
+          <label class="volume-control" for="ambienceVolume"><span>volume</span><output id="ambienceVolumeLabel" for="ambienceVolume">25%</output><input id="ambienceVolume" type="range" min="0" max="60" step="5" value="25"></label>
+          <div class="extra-action-row"><p id="ambienceStatus" class="feature-status" role="status" aria-live="polite">Nenhum som está tocando. O áudio começa quando você apertar o botão.</p><button id="ambienceToggleButton" class="save-button" type="button">ouvir ambiente</button></div>
+          <p class="feature-footnote">Os sons são gerados pelo próprio navegador. Não é preciso baixar áudios e nada toca sem você iniciar.</p>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <section id="linha-do-tempo" class="page secondary-page hidden-section">
+    <div class="section-shell extras-shell">
+      <header class="extras-intro">
+        <p class="eyebrow">o caminho que você percorreu</p>
+        <h1>Pequenos fragmentos <em>da sua história.</em></h1>
+        <p>Revisite desabafos, fotos, áudios, sentimentos registrados e cartas abertas. Não é uma medida de progresso — é só uma maneira de enxergar o que viveu.</p>
+      </header>
+      <section class="timeline-filters glass-card" aria-label="Filtros da linha do tempo">
+        <label class="field" for="timelineMonth"><span>mês</span><input type="month" id="timelineMonth"></label>
+        <label class="field" for="timelineType"><span>tipo de memória</span><select id="timelineType"><option value="all">tudo</option><option value="registro">desabafos e registros</option><option value="sentimento">sentimentos</option><option value="capsula">cartas abertas</option></select></label>
+        <label class="field" for="timelineMood"><span>sentimento</span><select id="timelineMood"><option value="all">todos</option><option value="calmo">em paz</option><option value="feliz">feliz</option><option value="ansioso">ansioso</option><option value="triste">triste</option><option value="cansado">cansado</option><option value="confuso">confuso</option><option value="irritado">irritado</option></select></label>
+        <label class="field timeline-search-field" for="timelineSearch"><span>buscar nas lembranças</span><input type="search" id="timelineSearch" placeholder="uma palavra, título ou trecho…"></label>
+        <button id="clearTimelineFilters" class="tool-button" type="button">limpar filtros</button>
+      </section>
+      <div class="page-heading timeline-heading"><div><p class="eyebrow">visto em perspectiva</p><h2>Sua linha do tempo</h2><p>Ordenada da lembrança mais recente para a mais antiga.</p></div><div id="timelineCount" class="stats">0 lembranças</div></div>
+      <div id="timelineStatus" class="feature-status timeline-status" role="status" aria-live="polite"></div>
+      <div id="timelineItems" class="timeline-list"></div>
+      <div id="emptyTimeline" class="empty-state"><div class="empty-icon">⌁</div><h3>A história começa com o que você guarda.</h3><p>Quando tiver registros, check-ins ou cartas abertas, eles vão se reunir aqui.</p></div>
+    </div>
+  </section>
+
   <footer class="footer">
     <p>Feito para escrever devagar, respirar entre as palavras e não precisar parecer bem o tempo todo.</p>
     <button id="clearDataButton" class="danger-link" type="button">apagar todos os registros</button>
@@ -232,5 +323,6 @@
   </template>
   <script src="script.js"></script>
   <script src="mood.js"></script>
+  <script src="features.js"></script>
 </body>
 </html>
