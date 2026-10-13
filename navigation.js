@@ -20,17 +20,21 @@
       return;
     }
 
-    document.body.classList.remove('writing-focus');
-    pages.forEach((page) => {
-      page.classList.toggle('hidden-section', page.id !== sectionId);
-    });
-    document.querySelectorAll('.nav-link').forEach((link) => {
-      link.classList.toggle('active', link === button);
-    });
+    if (typeof window.switchSection === 'function') {
+      // Reuse the main controller so records and media refresh when those pages are opened.
+      window.switchSection(sectionId);
+    } else {
+      document.body.classList.remove('writing-focus');
+      pages.forEach((page) => {
+        page.classList.toggle('hidden-section', page.id !== sectionId);
+      });
+      document.querySelectorAll('.nav-link').forEach((link) => {
+        link.classList.toggle('active', link === button);
+      });
+      try { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      catch (error) { window.scrollTo(0, 0); }
+    }
     closeMenu();
-
-    try { window.scrollTo({ top: 0, behavior: 'smooth' }); }
-    catch (error) { window.scrollTo(0, 0); }
   }
 
   toggle.addEventListener('click', (event) => {
