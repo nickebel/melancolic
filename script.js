@@ -352,7 +352,7 @@ function init() {
   document.addEventListener('click', (event) => {
     if (!event.target.closest('.topbar')) closeMainMenu();
   });
-  $('.nav-link').forEach((btn)=>btn.addEventListener('click',()=>switchSection(btn.dataset.section)));
+  $$('.nav-link').forEach((btn)=>btn.addEventListener('click',()=>switchSection(btn.dataset.section)));
   $('#entryText')?.addEventListener('keydown',(event)=>{ if((event.ctrlKey||event.metaKey)&&event.key==='Enter'){event.preventDefault();saveEntry();} });
   $('#chatInput')?.addEventListener('keydown',(event)=>{ if(event.key==='Enter' && !event.shiftKey){event.preventDefault();sendChat();} });
   renderEntries(); renderGallery(); renderChat();
