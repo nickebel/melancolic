@@ -17,9 +17,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=navfix-20261013-v3">
-  <link rel="stylesheet" href="mood.css?v=navfix-20261013-v3">
-  <link rel="stylesheet" href="features.css?v=navfix-20261013-v3">
+  <link rel="stylesheet" href="style.css?v=refuge-design-20261013-v4">
+  <link rel="stylesheet" href="mood.css?v=refuge-design-20261013-v4">
+  <link rel="stylesheet" href="features.css?v=refuge-design-20261013-v4">
 </head>
 <body>
   <div class="background" aria-hidden="true"></div>
@@ -52,11 +52,8 @@
       <button class="nav-link" data-section="mensagens" type="button">palavras para mim</button>
       <button class="nav-link" data-section="clima" type="button">clima interior</button>
       <button class="nav-link" data-section="escrita" type="button">escrita profunda</button>
+          <div class="privacy-pill menu-privacy-pill" title="Os dados deste site ficam neste navegador"><span class="dot"></span> local neste dispositivo</div>
     </nav>
-    <div class="privacy-pill" title="Os dados deste site ficam neste navegador">
-      <span class="dot"></span>
-      local neste dispositivo
-    </div>
   </header>
 
   <main id="inicio" class="page">
@@ -258,10 +255,9 @@
     <div class="section-shell extras-shell">
       <header class="extras-intro"><p class="eyebrow">um encerramento gentil</p><h1>O dia pode <em>terminar aqui.</em></h1><p>Reserve dois minutos para tirar um pouco do peso da cabeça. Você pode guardar as respostas no diário ou encerrar sem salvar.</p></header>
       <section class="glass-card extra-card ritual-card">
-        <div class="ritual-progress"><span>01</span><div></div><span>02</span><div></div><span>03</span></div>
-        <label class="field" for="ritualThoughts"><span>o que mais ocupou minha cabeça hoje?</span><textarea id="ritualThoughts" rows="3" maxlength="3000" placeholder="Não precisa resumir o dia inteiro. Escolha só o que está mais presente…"></textarea></label>
-        <label class="field" for="ritualRelease"><span>o que eu gostaria de deixar para trás por enquanto?</span><textarea id="ritualRelease" rows="3" maxlength="3000" placeholder="Algo que não precisa ser resolvido nesta noite, uma preocupação ou uma cobrança…"></textarea></label>
-        <label class="field" for="ritualKeep"><span>o que merece ser lembrado deste dia?</span><textarea id="ritualKeep" rows="3" maxlength="3000" placeholder="Pode ser algo grande, pequeno ou simplesmente o fato de ter chegado até aqui…"></textarea></label>
+        <label class="field ritual-field" for="ritualThoughts"><span class="ritual-step-label"><span class="ritual-step-number">01</span><span class="ritual-step-title">o que mais ocupou minha cabeça hoje?</span></span><textarea id="ritualThoughts" rows="3" maxlength="3000" placeholder="Não precisa resumir o dia inteiro. Escolha só o que está mais presente…"></textarea></label>
+        <label class="field ritual-field" for="ritualRelease"><span class="ritual-step-label"><span class="ritual-step-number">02</span><span class="ritual-step-title">o que eu gostaria de deixar para trás por enquanto?</span></span><textarea id="ritualRelease" rows="3" maxlength="3000" placeholder="Algo que não precisa ser resolvido nesta noite, uma preocupação ou uma cobrança…"></textarea></label>
+        <label class="field ritual-field" for="ritualKeep"><span class="ritual-step-label"><span class="ritual-step-number">03</span><span class="ritual-step-title">o que merece ser lembrado deste dia?</span></span><textarea id="ritualKeep" rows="3" maxlength="3000" placeholder="Pode ser algo grande, pequeno ou simplesmente o fato de ter chegado até aqui…"></textarea></label>
         <div class="ritual-footer"><p id="ritualStatus" class="feature-status" role="status" aria-live="polite">Suas respostas são guardadas como rascunho neste navegador até você decidir o que fazer com elas.</p><div class="ritual-actions"><button id="clearRitualButton" class="tool-button" type="button">encerrar sem salvar</button><button id="saveRitualButton" class="save-button" type="button">guardar no meu diário</button></div></div>
         <p class="feature-footnote">Ao guardar, as três respostas viram um registro comum em “Meus registros” e aparecem também na linha do tempo. Ao encerrar sem salvar, o rascunho local é descartado.</p>
       </section>
@@ -327,7 +323,7 @@
       <section class="refuge-layout">
         <div class="refuge-scene" id="refugeScene" data-scene="night" aria-live="polite">
           <div class="refuge-moon" aria-hidden="true">◔</div>
-          <div class="refuge-scene-copy"><p class="eyebrow">seu pequeno refúgio</p><h2 id="refugeSceneTitle">Noite tranquila</h2><p id="refugeSceneDescription">Um céu escuro, luz suave e espaço para respirar.</p></div>
+          <div class="refuge-scene-copy"><p class="eyebrow">seu pequeno refúgio</p><h2 id="refugeSceneTitle">Noite tranquila</h2><p id="refugeSceneDescription">Um céu escuro, luz suave e espaço para respirar.</p><p id="refugePersonalPhrase" class="refuge-personal-phrase hidden"></p></div>
           <div class="refuge-scene-horizon" aria-hidden="true"></div>
         </div>
         <div class="glass-card extra-card refuge-controls">
@@ -338,28 +334,47 @@
             <button type="button" class="scene-option" data-scene="sea" aria-pressed="false"><span aria-hidden="true">≈</span><span>mar</span></button>
             <button type="button" class="scene-option" data-scene="mist" aria-pressed="false"><span aria-hidden="true">☁</span><span>névoa</span></button>
             <button type="button" class="scene-option" data-scene="forest" aria-pressed="false"><span aria-hidden="true">♧</span><span>floresta</span></button>
+            <button type="button" class="scene-option" data-scene="sunset" aria-pressed="false"><span aria-hidden="true">◒</span><span>pôr do sol</span></button>
+            <button type="button" class="scene-option" data-scene="aurora" aria-pressed="false"><span aria-hidden="true">✧</span><span>aurora</span></button>
+            <button type="button" class="scene-option" data-scene="cabin" aria-pressed="false"><span aria-hidden="true">⌂</span><span>cabana</span></button>
+            <button type="button" class="scene-option" data-scene="rain" aria-pressed="false"><span aria-hidden="true">☂</span><span>janela chuvosa</span></button>
           </div>
           <div class="extra-divider"></div>
           <p class="eyebrow">escolha o som</p>
           <h2>O que você quer ouvir?</h2>
           <div class="ambience-options" id="ambienceOptions" role="group" aria-label="Escolha o som ambiente">
-            <button type="button" class="ambience-option is-active" data-ambience="rain" aria-pressed="true"><span aria-hidden="true">☂</span><strong>chuva</strong><small>gotas constantes</small></button>
-            <button type="button" class="ambience-option" data-ambience="ocean" aria-pressed="false"><span aria-hidden="true">≈</span><strong>mar</strong><small>ondas lentas</small></button>
-            <button type="button" class="ambience-option" data-ambience="wind" aria-pressed="false"><span aria-hidden="true">〰</span><strong>vento</strong><small>brisa suave</small></button>
-            <button type="button" class="ambience-option" data-ambience="forest" aria-pressed="false"><span aria-hidden="true">♧</span><strong>floresta</strong><small>ruído natural</small></button>
+            <button type="button" class="ambience-option is-active" data-ambience="rain" aria-pressed="true"><span aria-hidden="true">☂</span><strong>chuva</strong><small>textura suave</small></button>
+            <button type="button" class="ambience-option" data-ambience="ocean" aria-pressed="false"><span aria-hidden="true">≈</span><strong>mar</strong><small>movimento lento</small></button>
+            <button type="button" class="ambience-option" data-ambience="wind" aria-pressed="false"><span aria-hidden="true">〰</span><strong>vento</strong><small>brisa profunda</small></button>
+            <button type="button" class="ambience-option" data-ambience="forest" aria-pressed="false"><span aria-hidden="true">♧</span><strong>folhas</strong><small>ruído de floresta</small></button>
+            <button type="button" class="ambience-option" data-ambience="brook" aria-pressed="false"><span aria-hidden="true">﹏</span><strong>riacho</strong><small>água corrente</small></button>
+            <button type="button" class="ambience-option" data-ambience="embers" aria-pressed="false"><span aria-hidden="true">✹</span><strong>brasa suave</strong><small>calor distante</small></button>
+            <button type="button" class="ambience-option" data-ambience="night" aria-pressed="false"><span aria-hidden="true">✦</span><strong>noite</strong><small>sons bem sutis</small></button>
+            <button type="button" class="ambience-option" data-ambience="white" aria-pressed="false"><span aria-hidden="true">∿</span><strong>ruído uniforme</strong><small>sem grandes variações</small></button>
           </div>
           <label class="volume-control" for="ambienceVolume"><span>volume</span><output id="ambienceVolumeLabel" for="ambienceVolume">25%</output><input id="ambienceVolume" type="range" min="0" max="60" step="5" value="25"></label>
+          <div class="extra-divider"></div>
+          <p class="eyebrow">deixe com a sua cara</p><h2>Seu toque pessoal</h2>
+          <label class="field" for="refugePersonalPhraseInput"><span>frase que aparece no refúgio <small>(opcional)</small></span><input id="refugePersonalPhraseInput" type="text" maxlength="140" placeholder="ex.: aqui, eu posso respirar sem pressa"></label>
+          <label class="refuge-color-field" for="refugeAccentColor"><span>cor da luz</span><input id="refugeAccentColor" type="color" value="#82b3a2"><output id="refugeAccentLabel">#82B3A2</output></label>
+          <div class="refuge-quick-scenes" aria-label="Combinações para momentos diferentes">
+            <button type="button" class="refuge-mood-preset" data-refuge-mood="hard"><span aria-hidden="true">☁</span><span><strong>dia difícil</strong><small>névoa e chuva leve</small></span></button>
+            <button type="button" class="refuge-mood-preset" data-refuge-mood="calm"><span aria-hidden="true">☾</span><span><strong>momento tranquilo</strong><small>mar e som suave</small></span></button>
+          </div>
           <div class="extra-action-row"><p id="ambienceStatus" class="feature-status" role="status" aria-live="polite">Nenhum som está tocando. O áudio começa quando você apertar o botão.</p><button id="ambienceToggleButton" class="save-button" type="button">ouvir ambiente</button></div>
           <div class="extra-divider"></div>
           <p class="eyebrow">guardar meu ambiente</p>
           <label class="field" for="refugePresetName"><span>nome do refúgio <small>(opcional)</small></span><input id="refugePresetName" type="text" maxlength="60" placeholder="ex.: meu canto de paz" autocomplete="off"></label>
-          <div class="refuge-preset-actions">
-            <button id="saveRefugePresetButton" class="save-button" type="button">salvar esta combinação</button>
-            <button id="loadRefugePresetButton" class="tool-button" type="button" disabled>abrir meu refúgio salvo</button>
+          <div class="refuge-preset-library">
+            <label class="field" for="refugePresetSelect"><span>ambientes que você salvou</span><select id="refugePresetSelect"><option value="">nenhum ambiente salvo</option></select></label>
+            <div class="refuge-preset-actions">
+              <button id="saveRefugePresetButton" class="save-button" type="button">salvar esta combinação</button>
+              <button id="loadRefugePresetButton" class="tool-button" type="button" disabled>abrir combinação escolhida</button>
+            </div>
           </div>
           <p id="refugePresetStatus" class="feature-status" role="status" aria-live="polite"></p>
           <p id="refugePresetSummary" class="feature-footnote">Você ainda não salvou uma combinação pessoal.</p>
-          <p class="feature-footnote">Os sons são gerados pelo próprio navegador. Não é preciso baixar áudios e nada toca sem você iniciar.</p>
+          <p class="feature-footnote">As texturas sonoras são sintetizadas pelo navegador; não são gravações de campo. Nada toca sem você iniciar.</p>
         </div>
       </section>
     </div>
@@ -509,9 +524,9 @@
     </div>
   </div>
 
-  <script src="script.js?v=navfix-20261013-v3"></script>
-  <script src="mood.js?v=navfix-20261013-v3"></script>
-  <script src="features.js?v=navfix-20261013-v3"></script>
-  <script src="navigation.js?v=navfix-20261013-v3"></script>
+  <script src="script.js?v=refuge-design-20261013-v4"></script>
+  <script src="mood.js?v=refuge-design-20261013-v4"></script>
+  <script src="features.js?v=refuge-design-20261013-v4"></script>
+  <script src="navigation.js?v=refuge-design-20261013-v4"></script>
 </body>
 </html>

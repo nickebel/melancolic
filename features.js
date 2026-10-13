@@ -7,6 +7,8 @@
   const MOOD_KEY = 'melancolic-mood-checkins-v1';
   const KIT_KEY = 'melancolic-care-kit-v1';
   const REFUGE_KEY = 'melancolic-refuge-preset-v1';
+  const REFUGE_PRESETS_KEY = 'melancolic-refuge-presets-v2';
+  const REFUGE_PERSONAL_KEY = 'melancolic-refuge-personal-v1';
   const RITUAL_DRAFT_KEY = 'melancolic-evening-ritual-draft-v1';
   const PIN_KEY = 'melancolic-local-pin-v1';
   const UNLOCKED_KEY = 'melancolic-local-unlocked-v1';
@@ -15,7 +17,7 @@
   const ENTRY_STORE = 'entries';
   const BACKUP_FORMAT = 'melancolic-encrypted-backup';
   const BACKUP_VERSION = 1;
-  const BACKUP_KEYS = [CAPSULE_KEY, MOOD_KEY, KIT_KEY, REFUGE_KEY, RITUAL_DRAFT_KEY, 'melancolic-personal-museum-v1', 'melancolic-personal-messages-v1', 'melancolic-interior-weather-v1', 'melancolic-deep-writing-draft-v1'];
+  const BACKUP_KEYS = [CAPSULE_KEY, MOOD_KEY, KIT_KEY, REFUGE_KEY, REFUGE_PRESETS_KEY, REFUGE_PERSONAL_KEY, RITUAL_DRAFT_KEY, 'melancolic-personal-museum-v1', 'melancolic-personal-messages-v1', 'melancolic-interior-weather-v1', 'melancolic-deep-writing-draft-v1'];
   const MOODS = {
     calmo: { label: 'em paz', emoji: '☁' },
     feliz: { label: 'feliz', emoji: '☀' },
@@ -29,13 +31,21 @@
     night: { title: 'Noite tranquila', description: 'Um céu escuro, luz suave e espaço para respirar.' },
     sea: { title: 'Perto do mar', description: 'O horizonte se abre e tudo parece poder esperar um pouco.' },
     mist: { title: 'Entre a névoa', description: 'Formas suaves, silêncio e nenhum lugar para chegar depressa.' },
-    forest: { title: 'No meio da floresta', description: 'Tons profundos e um abrigo imaginado entre as árvores.' }
+    forest: { title: 'No meio da floresta', description: 'Tons profundos e um abrigo imaginado entre as árvores.' },
+    sunset: { title: 'Depois do pôr do sol', description: 'Um céu morno, como o final de um dia que pode descansar.' },
+    aurora: { title: 'Sob uma aurora', description: 'Luzes suaves no escuro, movimento lento e espaço para imaginar.' },
+    cabin: { title: 'Uma cabana quieta', description: 'Um canto protegido do lado de fora, com espaço para recolher-se.' },
+    rain: { title: 'Perto de uma janela chuvosa', description: 'A chuva fica do lado de fora; você pode permanecer aqui dentro.' }
   };
   const AMBIENCES = {
-    rain: { label: 'chuva', filter: 'highpass', cutoff: 650, level: 0.44, modulation: 0.008, rate: 0.12 },
-    ocean: { label: 'mar', filter: 'lowpass', cutoff: 680, level: 0.48, modulation: 0.10, rate: 0.075 },
-    wind: { label: 'vento', filter: 'lowpass', cutoff: 330, level: 0.55, modulation: 0.06, rate: 0.11 },
-    forest: { label: 'floresta', filter: 'bandpass', cutoff: 1450, level: 0.16, modulation: 0.018, rate: 0.17 }
+    rain: { label: 'chuva suave', filter: 'highpass', cutoff: 650, level: 0.38, modulation: 0.008, rate: 0.12 },
+    ocean: { label: 'mar', filter: 'lowpass', cutoff: 680, level: 0.42, modulation: 0.10, rate: 0.075 },
+    wind: { label: 'vento', filter: 'lowpass', cutoff: 330, level: 0.40, modulation: 0.06, rate: 0.11 },
+    forest: { label: 'folhas', filter: 'bandpass', cutoff: 1450, level: 0.14, modulation: 0.018, rate: 0.17 },
+    brook: { label: 'riacho', filter: 'bandpass', cutoff: 980, level: 0.22, modulation: 0.045, rate: 0.22 },
+    embers: { label: 'brasa suave', filter: 'bandpass', cutoff: 560, level: 0.14, modulation: 0.035, rate: 1.25 },
+    night: { label: 'noite sutil', filter: 'highpass', cutoff: 1950, level: 0.08, modulation: 0.022, rate: 1.45 },
+    white: { label: 'ruído uniforme', filter: 'lowpass', cutoff: 1750, level: 0.13, modulation: 0.008, rate: 0.04 }
   };
   const SUGGESTIONS = [
     'Solte os ombros e perceba o apoio da cadeira ou do chão.',
@@ -291,41 +301,88 @@
       ambientGain.gain.value = volume * profile.level; ambientLfoGain.gain.value = volume * profile.modulation;
     }
   }
-  function saveRefugePreset() {
-    const preset = {
-      name: ($('#refugePresetName').value || '').trim().slice(0, 60) || 'Meu refúgio',
-      scene: $('#refugeScene').dataset.scene || 'night',
-      ambience: selectedAmbience,
-      volume: Number($('#ambienceVolume').value || 25),
-      updatedAt: Date.now()
-    };
-    try {
-      writeObject(REFUGE_KEY, preset);
-      renderRefugePreset();
-      $('#refugePresetStatus').textContent = 'Sua combinação pessoal foi guardada neste dispositivo.';
-    } catch (error) {
-      console.error(error); $('#refugePresetStatus').textContent = 'Não foi possível guardar. Verifique o armazenamento do navegador.';
+  function readRefugePresets() {
+    let saved = readArray(REFUGE_PRESETS_KEY).filter((item) => item && typeof item === 'object');
+    if (!saved.length) {
+      const legacy = readObject(REFUGE_KEY);
+      if (legacy && typeof legacy === 'object') {
+        saved = [{ ...legacy, id: legacy.id || makeId(), accent: legacy.accent || '#82b3a2', phrase: legacy.phrase || '' }];
+        try { writeObject(REFUGE_PRESETS_KEY, saved); } catch (error) {}
+      }
     }
+    return saved;
   }
-  function renderRefugePreset() {
-    const preset = readObject(REFUGE_KEY);
-    const button = $('#loadRefugePresetButton');
-    if (!button) return;
-    button.disabled = !preset;
-    $('#refugePresetSummary').textContent = preset
-      ? 'Salvo: ' + preset.name + ' · cenário ' + (SCENES[preset.scene]?.title || 'Noite tranquila') + ' · som ' + (AMBIENCES[preset.ambience]?.label || 'chuva') + '.'
-      : 'Você ainda não salvou uma combinação pessoal.';
+  function refugeColorToRgba(hex, alpha) {
+    const value = String(hex || '#82b3a2').replace('#','');
+    const safe = /^[0-9a-f]{6}$/i.test(value) ? value : '82b3a2';
+    return 'rgba(' + parseInt(safe.slice(0,2),16) + ',' + parseInt(safe.slice(2,4),16) + ',' + parseInt(safe.slice(4,6),16) + ',' + alpha + ')';
   }
-  function loadRefugePreset() {
-    const preset = readObject(REFUGE_KEY);
-    if (!preset) { $('#refugePresetStatus').textContent = 'Salve uma combinação antes de tentar abri-la.'; return; }
+  function setRefugeAccent(color, saveSetting = false) {
+    const hex = /^#[0-9a-f]{6}$/i.test(String(color)) ? String(color) : '#82b3a2';
+    $('#refugeScene')?.style.setProperty('--refuge-tint', refugeColorToRgba(hex,0.23));
+    if ($('#refugeAccentColor')) $('#refugeAccentColor').value = hex;
+    if ($('#refugeAccentLabel')) $('#refugeAccentLabel').textContent = hex.toUpperCase();
+    if (saveSetting) { try { writeObject(REFUGE_PERSONAL_KEY,{...(readObject(REFUGE_PERSONAL_KEY)||{}),accent:hex}); } catch(error){} }
+  }
+  function setRefugePhrase(phrase, saveSetting = false) {
+    const value = String(phrase || '').trim().slice(0,140);
+    const preview = $('#refugePersonalPhrase');
+    if (preview) { preview.textContent=value ? '“'+value+'”' : ''; preview.classList.toggle('hidden',!value); }
+    if ($('#refugePersonalPhraseInput')) $('#refugePersonalPhraseInput').value=value;
+    if (saveSetting) { try { writeObject(REFUGE_PERSONAL_KEY,{...(readObject(REFUGE_PERSONAL_KEY)||{}),phrase:value}); } catch(error){} }
+  }
+  function applyRefugePreset(preset, updateName = true) {
+    if (!preset) return;
     selectScene(SCENES[preset.scene] ? preset.scene : 'night');
     selectAmbience(AMBIENCES[preset.ambience] ? preset.ambience : 'rain');
-    $('#ambienceVolume').value = String(Math.min(60, Math.max(0, Number(preset.volume) || 0)));
-    $('#ambienceVolumeLabel').textContent = $('#ambienceVolume').value + '%';
+    $('#ambienceVolume').value=String(Math.min(60,Math.max(0,Number(preset.volume ?? 25))));
+    $('#ambienceVolumeLabel').textContent=$('#ambienceVolume').value+'%';
+    setRefugeAccent(preset.accent || '#82b3a2');
+    setRefugePhrase(preset.phrase || '');
     updateAmbientVolume();
-    $('#refugePresetName').value = preset.name || '';
-    $('#refugePresetStatus').textContent = 'Sua combinação foi restaurada. O som só começa quando você pedir.';
+    if(updateName && $('#refugePresetName')) $('#refugePresetName').value=preset.name || '';
+  }
+  function saveRefugePreset() {
+    const name=($('#refugePresetName').value||'').trim().slice(0,60)||'Meu refúgio';
+    const preset={id:makeId(),name,scene:$('#refugeScene').dataset.scene||'night',ambience:selectedAmbience,volume:Number($('#ambienceVolume').value||25),accent:$('#refugeAccentColor')?.value||'#82b3a2',phrase:$('#refugePersonalPhraseInput')?.value?.trim().slice(0,140)||'',updatedAt:Date.now()};
+    try {
+      const presets=readRefugePresets();
+      const existingIndex=presets.findIndex(item=>String(item.name||'').toLocaleLowerCase('pt-BR')===name.toLocaleLowerCase('pt-BR'));
+      if(existingIndex>=0){preset.id=presets[existingIndex].id||preset.id;presets[existingIndex]=preset;} else presets.push(preset);
+      writeObject(REFUGE_PRESETS_KEY,presets.slice(-20));
+      writeObject(REFUGE_KEY,preset);
+      writeObject(REFUGE_PERSONAL_KEY,{accent:preset.accent,phrase:preset.phrase});
+      renderRefugePreset();
+      if($('#refugePresetSelect')) $('#refugePresetSelect').value=preset.id;
+      $('#refugePresetStatus').textContent=existingIndex>=0?'A combinação com esse nome foi atualizada.':'Sua combinação ficou guardada. Você pode salvar outros ambientes também.';
+    } catch(error){console.error(error);$('#refugePresetStatus').textContent='Não foi possível guardar. Verifique o armazenamento do navegador.';}
+  }
+  function renderRefugePreset() {
+    const presets=readRefugePresets(), button=$('#loadRefugePresetButton'), select=$('#refugePresetSelect');
+    if(select){
+      const previous=select.value;
+      select.replaceChildren(new Option(presets.length?'escolha um ambiente salvo':'nenhum ambiente salvo',''));
+      presets.slice().reverse().forEach(preset=>select.appendChild(new Option(preset.name||'Meu refúgio',String(preset.id||''))));
+      if(presets.some(p=>String(p.id||'')===previous)) select.value=previous;
+      else if(presets.length) select.value=String(presets[presets.length-1].id||'');
+    }
+    if(button) button.disabled=!presets.length;
+    $('#refugePresetSummary').textContent=presets.length?presets.length+(presets.length===1?' combinação salva neste dispositivo.':' combinações salvas neste dispositivo.')+' Você pode escolher qualquer uma acima.':'Você ainda não salvou uma combinação pessoal.';
+  }
+  function loadRefugePreset() {
+    const select=$('#refugePresetSelect'), presets=readRefugePresets();
+    const preset=presets.find(item=>String(item.id||'')===String(select&&select.value))||presets[presets.length-1];
+    if(!preset){$('#refugePresetStatus').textContent='Salve uma combinação antes de tentar abri-la.';return;}
+    applyRefugePreset(preset);
+    $('#refugePresetStatus').textContent='“'+(preset.name||'Meu refúgio')+'” foi restaurado. O som só começa quando você pedir.';
+  }
+  function applyRefugeQuickPreset(kind) {
+    const preset=kind==='hard'
+      ? {name:'Dia difícil',scene:'mist',ambience:'rain',volume:15,accent:'#91a9b3',phrase:'Você não precisa resolver tudo agora. Só atravesse este instante.'}
+      : {name:'Momento tranquilo',scene:'sea',ambience:'ocean',volume:20,accent:'#82b3a2',phrase:'Este momento também pode ser simples. Permita-se descansar.'};
+    applyRefugePreset(preset);setRefugeAccent(preset.accent,true);setRefugePhrase(preset.phrase,true);
+    $('#refugePresetName').value=preset.name;
+    $('#refugePresetStatus').textContent='Combinação sugerida aplicada. Você pode ajustar qualquer opção e salvar com o nome que preferir.';
   }
 
   // Care kit
@@ -1429,15 +1486,20 @@
     $('#ambienceVolume').addEventListener('input', updateAmbientVolume);
     $('#saveRefugePresetButton').addEventListener('click', saveRefugePreset);
     $('#loadRefugePresetButton').addEventListener('click', loadRefugePreset);
+    const personalRefuge=readObject(REFUGE_PERSONAL_KEY)||{};
+    setRefugeAccent(personalRefuge.accent||'#82b3a2');setRefugePhrase(personalRefuge.phrase||'');
+    const savedPresets=readRefugePresets(),savedPreset=savedPresets[savedPresets.length-1]||readObject(REFUGE_KEY);
+    if(savedPreset)applyRefugePreset(savedPreset);
     renderRefugePreset();
-    const savedPreset = readObject(REFUGE_KEY);
-    if (savedPreset) {
-      selectScene(SCENES[savedPreset.scene] ? savedPreset.scene : 'night');
-      selectAmbience(AMBIENCES[savedPreset.ambience] ? savedPreset.ambience : 'rain');
-      $('#ambienceVolume').value = String(Math.min(60, Math.max(0, Number(savedPreset.volume) || 0)));
-      $('#ambienceVolumeLabel').textContent = $('#ambienceVolume').value + '%';
-      $('#refugePresetName').value = savedPreset.name || '';
-    }
+    $('#refugeAccentColor').addEventListener('input',()=>setRefugeAccent($('#refugeAccentColor').value));
+    $('#refugeAccentColor').addEventListener('change',()=>setRefugeAccent($('#refugeAccentColor').value,true));
+    $('#refugePersonalPhraseInput').addEventListener('input',()=>setRefugePhrase($('#refugePersonalPhraseInput').value));
+    $('#refugePersonalPhraseInput').addEventListener('change',()=>setRefugePhrase($('#refugePersonalPhraseInput').value,true));
+    $('.refuge-mood-preset').forEach(button=>button.addEventListener('click',()=>applyRefugeQuickPreset(button.dataset.refugeMood)));
+    $('#refugePresetSelect').addEventListener('change',()=>{
+      const selected=readRefugePresets().find(item=>String(item.id||'')===$('#refugePresetSelect').value);
+      if(selected&&$('#refugePresetName'))$('#refugePresetName').value=selected.name||'';
+    });
     updateAmbientVolume();
 
     $('#saveKitButton').addEventListener('click', saveKit);

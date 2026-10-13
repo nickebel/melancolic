@@ -312,3 +312,65 @@ button,.tool-button,.save-button { border-radius:13px; }
   .kit-callout-mark { flex-basis:30px; width:30px; height:30px; font-size:18px; }
   .kit-callout h2 { font-size:19px; }
 }
+
+
+/* Refúgio personalizável e alinhamento das etapas do ritual. */
+.refuge-scene { isolation:isolate; }
+.refuge-scene::after { content:""; position:absolute; inset:0; z-index:0; pointer-events:none; background:radial-gradient(ellipse at 22% 22%,var(--refuge-tint,rgba(130,179,162,.23)),transparent 58%); opacity:.8; transition:background .4s ease; }
+.refuge-scene > * { z-index:1; }
+.refuge-scene-horizon { z-index:0 !important; }
+.refuge-scene[data-scene="sunset"] { background:radial-gradient(ellipse at 72% 23%,rgba(236,174,136,.25),transparent 36%),linear-gradient(160deg,#523d4d 0%,#2f303e 48%,#111b22 100%); }
+.refuge-scene[data-scene="sunset"] .refuge-scene-horizon { background:linear-gradient(180deg,rgba(203,137,115,.30),rgba(8,18,22,.9)); }
+.refuge-scene[data-scene="aurora"] { background:radial-gradient(ellipse at 35% 15%,rgba(112,178,158,.2),transparent 32%),radial-gradient(ellipse at 80% 35%,rgba(111,123,181,.22),transparent 38%),linear-gradient(160deg,#172d3c 0%,#11232f 52%,#071619 100%); }
+.refuge-scene[data-scene="aurora"] .refuge-scene-horizon { background:linear-gradient(180deg,rgba(104,163,151,.23),rgba(5,17,21,.82)); }
+.refuge-scene[data-scene="cabin"] { background:radial-gradient(ellipse at 72% 18%,rgba(208,173,119,.2),transparent 35%),linear-gradient(160deg,#453b35 0%,#292d2d 49%,#0b1719 100%); }
+.refuge-scene[data-scene="cabin"] .refuge-scene-horizon { background:linear-gradient(180deg,rgba(151,115,82,.24),rgba(4,15,16,.87)); }
+.refuge-scene[data-scene="rain"] { background:radial-gradient(ellipse at 76% 18%,rgba(126,165,188,.22),transparent 36%),linear-gradient(160deg,#223b4a 0%,#182d38 53%,#0a171c 100%); }
+.refuge-scene[data-scene="rain"] .refuge-scene-horizon { background:repeating-linear-gradient(180deg,rgba(148,180,198,.12) 0 1px,transparent 1px 15px),linear-gradient(180deg,rgba(67,105,126,.28),rgba(5,17,21,.84)); }
+.refuge-scene-copy { z-index:2; }
+.refuge-personal-phrase { max-width:300px; margin:18px 0 0; padding:12px 14px; border-left:2px solid rgba(194,225,210,.5); border-radius:0 12px 12px 0; background:rgba(3,15,18,.3); color:#d0e2d8; font:italic 13px/1.8 'Manrope',sans-serif; white-space:pre-wrap; overflow-wrap:anywhere; backdrop-filter:blur(6px); }
+.refuge-color-field { display:grid; grid-template-columns:1fr 54px; align-items:center; gap:5px 12px; margin:0 0 20px; color:#90aaa2; text-transform:uppercase; letter-spacing:.13em; font-size:10px; }
+.refuge-color-field span { grid-column:1; }
+.refuge-color-field input[type="color"] { grid-column:2; grid-row:1 / 3; width:54px; height:48px; padding:4px; border:1px solid rgba(183,216,207,.18); border-radius:13px; background:rgba(3,15,18,.72); cursor:pointer; }
+.refuge-color-field output { grid-column:1; color:#b6cbc3; letter-spacing:.08em; font-size:10px; }
+.refuge-quick-scenes { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:12px 0 7px; }
+.refuge-mood-preset { display:flex; align-items:center; gap:11px; min-width:0; padding:13px; text-align:left; border:1px solid rgba(186,218,208,.14); border-radius:15px; color:#b8cbc4; background:linear-gradient(145deg,rgba(95,137,128,.10),rgba(8,24,27,.45)); cursor:pointer; transition:background .2s,border-color .2s,transform .2s; }
+.refuge-mood-preset:hover { border-color:rgba(165,207,191,.34); background:rgba(99,145,129,.15); transform:translateY(-1px); }
+.refuge-mood-preset > span:first-child { flex:0 0 33px; width:33px; height:33px; display:grid; place-items:center; border-radius:11px; color:#c0dbcf; background:rgba(127,169,151,.13); font-size:20px; }
+.refuge-mood-preset > span:last-child { min-width:0; display:grid; gap:4px; }
+.refuge-mood-preset strong { color:#c8dbd3; font-size:11px; }
+.refuge-mood-preset small { color:#7d9890; font-size:9px; line-height:1.5; }
+.refuge-preset-library { padding-top:5px; }
+.refuge-preset-library .field { margin-bottom:12px; }
+.refuge-preset-actions { display:flex; flex-wrap:wrap; gap:10px; }
+.refuge-preset-actions .save-button,.refuge-preset-actions .tool-button { flex:1 1 165px; min-height:44px; }
+.scene-options { grid-template-columns:repeat(4,minmax(0,1fr)); gap:9px; }
+.scene-option { min-width:0; min-height:76px; padding:8px 4px; line-height:1.3; overflow-wrap:anywhere; }
+.ambience-options { grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
+.ambience-option { min-width:0; padding:10px 9px; border-radius:14px; }
+.refuge-controls .field input[type="text"] { border-radius:14px; }
+.ritual-card { padding:clamp(18px,3vw,30px); }
+.ritual-field { margin-bottom:26px; }
+.ritual-field > .ritual-step-label { display:grid; grid-template-columns:34px minmax(0,1fr); align-items:start; gap:12px; width:100%; margin:0 0 12px; color:#90aaa2; text-transform:none; letter-spacing:0; line-height:1.55; }
+.ritual-step-number { display:grid; place-items:center; width:32px; height:32px; border-radius:11px; border:1px solid rgba(169,209,190,.22); background:rgba(94,146,123,.13); color:#c4ded0; font:600 10px/1 'Manrope',sans-serif; letter-spacing:.06em; }
+.ritual-step-title { display:block; min-width:0; padding-top:6px; color:#9fb8ae; font:600 11px/1.65 'Manrope',sans-serif; letter-spacing:.12em; overflow-wrap:anywhere; }
+.ritual-field textarea { width:calc(100% - 46px); min-height:150px; margin-left:46px; border-radius:16px; }
+.ritual-footer { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; flex-wrap:wrap; margin-top:8px; }
+.ritual-footer > .feature-status { flex:1 1 230px; min-width:0; }
+.ritual-actions { display:flex; align-items:center; gap:9px; flex-wrap:wrap; }
+.ritual-actions button { min-height:43px; }
+.topbar { gap:14px; }
+.topbar .brand { flex:1 1 auto; min-width:0; }
+.topbar .menu-toggle { flex:0 0 44px; margin-left:auto; }
+.topbar .menu-privacy-pill { display:flex; width:100%; margin:6px 0 0; padding:12px 13px 5px; border-top:1px solid rgba(194,226,216,.10); color:#78938c; }
+.topbar .nav { right:0; left:auto; }
+@media (max-width:680px) {
+  .topbar { flex-wrap:nowrap; }
+  .topbar .brand { flex:1 1 auto; }
+  .topbar .menu-toggle { margin-left:auto; }
+  .refuge-quick-scenes { grid-template-columns:1fr; }
+  .scene-options { grid-template-columns:repeat(4,minmax(0,1fr)); }
+  .ritual-field textarea { width:100%; margin-left:0; min-height:130px; }
+  .ritual-actions { width:100%; }
+  .ritual-actions button { flex:1 1 100%; }
+}
