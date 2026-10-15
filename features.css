@@ -550,3 +550,79 @@ button,.tool-button,.save-button { border-radius:13px; }
   .extras-intro { padding-bottom: 27px; }
   .extra-card, .pause-card { padding: 21px 17px; }
 }
+
+
+/* Flatten decorative UI into a consistent notebook surface. */
+.menu-toggle {
+  border-radius: 4px;
+  border: 1px solid rgba(192,211,201,.26);
+  background: transparent;
+  box-shadow: none;
+}
+.menu-toggle:hover, .menu-toggle:focus-visible {
+  background: rgba(178,201,186,.06);
+  border-color: #91ab9a;
+  box-shadow: none;
+}
+.topbar .nav { border-radius: 4px; box-shadow: 0 12px 24px rgba(0,0,0,.18); }
+.kit-callout, .capsule-card, .message-surprise, .past-memory-card,
+.constellation-detail, .museum-memory, .personal-message-card,
+.weather-history-item, .timeline-empty-filter, .refuge-preset-library,
+.timeline-filters, .writing-card, .creative-card {
+  background: #0d2024;
+  border-radius: 5px;
+  box-shadow: none;
+  border-color: rgba(192,211,201,.17);
+}
+.kit-callout {
+  border-left: 2px solid #8ca595;
+  background: #0d2024;
+}
+.kit-callout-mark {
+  border-radius: 3px;
+  background: transparent;
+  border-color: rgba(192,211,201,.28);
+  color: #c1d0c3;
+}
+.capsule-card { border: 0; border-bottom: 1px solid rgba(192,211,201,.2); }
+.capsule-state, .museum-collection-chip, .message-delete, .timeline-kind {
+  border-radius: 3px;
+  box-shadow: none;
+}
+.museum-collection-chip { background: transparent; }
+.weather-option, .refuge-mood-preset, .ritual-step-number,
+.refuge-color-field input[type="color"], .refuge-personal-phrase,
+.refuge-controls .field input[type="text"], .ritual-field textarea,
+.museum-assignment, .timeline-media img, .museum-media-item img {
+  border-radius: 5px;
+  box-shadow: none;
+}
+.refuge-personal-phrase { backdrop-filter: none; -webkit-backdrop-filter: none; }
+.refuge-mood-preset, .weather-option {
+  background: #0a1b1f;
+  border-color: rgba(192,211,201,.17);
+}
+.refuge-mood-preset:hover, .weather-option:hover { transform: none; }
+.refuge-mood-preset > span:first-child { border-radius: 3px; background: transparent; }
+.ritual-step-number { background: #162b2d; }
+.field input[type="date"], .timeline-filters select,
+.timeline-filters input[type="month"], .timeline-filters input[type="search"],
+.field select, .museum-assignment {
+  border-radius: 5px;
+  box-shadow: none;
+}
+.tool-button {
+  border-radius: 5px;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+}
+.tool-button:hover { background: rgba(178,201,186,.06); transform: none; }
+.save-button { border-radius: 5px; box-shadow: none; }
+.extra-action-row .save-button:hover { transform: none; }
+.timeline-card::before { box-shadow: none; }
+@media (max-width: 680px) {
+  .kit-callout { padding: 18px; gap: 12px; }
+  .kit-callout-mark { flex-basis: 30px; width: 30px; height: 30px; }
+  .timeline-card { margin-left: 28px; }
+}
