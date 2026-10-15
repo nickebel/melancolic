@@ -374,3 +374,47 @@ button,.tool-button,.save-button { border-radius:13px; }
   .ritual-actions { width:100%; }
   .ritual-actions button { flex:1 1 100%; }
 }
+
+
+/* .melancolic-menu-and-refuge-refinements */
+.topbar .nav { gap: 8px; padding: 12px; width: min(370px, calc(100vw - 24px)); max-height: min(74svh, 680px); }
+.nav-group {
+  overflow: hidden; border: 1px solid rgba(171,205,196,.11);
+  border-radius: 13px; background: rgba(15,35,39,.48);
+}
+.nav-group-toggle {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  width: 100%; min-height: 46px; padding: 11px 13px;
+  border: 0; border-radius: 0; background: transparent; color: #d5e3dd;
+  text-align: left; font-size: 12px; font-weight: 700; letter-spacing: .02em;
+  cursor: pointer;
+}
+.nav-group-toggle:hover { background: rgba(174,211,197,.07); }
+.nav-group-toggle:focus-visible { outline-offset: -3px; }
+.nav-group-chevron { color: #98b7ab; font-size: 17px; font-weight: 400; transition: transform .18s ease; }
+.nav-group.is-open .nav-group-chevron { transform: rotate(180deg); }
+.nav-group-links { display: none; gap: 3px; padding: 0 6px 6px; }
+.nav-group.is-open .nav-group-links { display: grid; }
+.topbar .nav-group .nav-link { min-height: 44px; }
+.topbar .nav-group .nav-link.active { border-color: rgba(159,202,185,.2); }
+.menu-privacy-pill { margin: 4px 2px 1px; justify-content: center; }
+.scene-options { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; }
+.scene-option { min-width: 0; min-height: 76px; padding: 8px 5px; font-size: 11px; line-height: 1.35; overflow-wrap: anywhere; }
+.ambience-option { min-width: 0; }
+.ambience-option strong, .ambience-option small { overflow-wrap: anywhere; }
+.refuge-scene { border-radius: var(--radius-feature); }
+.refuge-controls, .extra-card, .pause-card, .writing-card, .creative-card { border-radius: var(--radius-card); }
+@media (max-width: 1000px) {
+  .scene-options { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 680px) {
+  .scene-options { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .scene-option { min-height: 66px; font-size: 12px; }
+  .ambience-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .topbar .nav { max-height: min(76svh, 620px); }
+  .topbar .nav-link { min-height: 46px; }
+}
+@media (max-width: 380px) {
+  .topbar .nav { width: calc(100vw - 20px); }
+  .scene-option { padding-inline: 4px; }
+}
