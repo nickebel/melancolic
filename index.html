@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#0c1b20">
   <meta name="description" content="Um espaço íntimo para escrever, guardar memórias, criar cartas para o futuro, respirar e encontrar uma atmosfera tranquila.">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,
@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="features.css?v=refuge-design-20261013-v5">
 </head>
 <body>
+  <a class="skip-link" href="#inicio">Pular para o conteúdo</a>
   <div class="background" aria-hidden="true"></div>
   <div class="grain" aria-hidden="true"></div>
   <header class="topbar">
@@ -36,24 +37,44 @@
       <span></span><span></span><span></span>
     </button>
     <nav id="mainNav" class="nav" aria-label="Navegação principal">
-      <button class="nav-link active" data-section="inicio" type="button">desabafar</button>
-      <button class="nav-link" data-section="pausa" type="button">minha pausa</button>
-      <button class="nav-link" data-section="historias" type="button">meus registros</button>
-      <button class="nav-link" data-section="galeria" type="button">fotos & sons</button>
-      <button class="nav-link" data-section="capsula" type="button">cápsula do tempo</button>
-      <button class="nav-link" data-section="refugio" type="button">refúgio sensorial</button>
-      <button class="nav-link" data-section="linha-do-tempo" type="button">linha do tempo</button>
-      <button class="nav-link" data-section="kit" type="button">kit de acolhimento</button>
-      <button class="nav-link" data-section="ritual" type="button">ritual do dia</button>
-      <button class="nav-link" data-section="privacidade" type="button">backup & proteção</button>
-      <button class="nav-link" data-section="constelacao" type="button">constelação</button>
-      <button class="nav-link" data-section="eu-passado" type="button">eu do passado</button>
-      <button class="nav-link" data-section="museu" type="button">museu pessoal</button>
-      <button class="nav-link" data-section="mensagens" type="button">palavras para mim</button>
-      <button class="nav-link" data-section="clima" type="button">clima interior</button>
-      <button class="nav-link" data-section="escrita" type="button">escrita profunda</button>
-          <div class="privacy-pill menu-privacy-pill" title="Os dados deste site ficam neste navegador"><span class="dot"></span> local neste dispositivo</div>
-    </nav>
+    <div class="nav-group is-open">
+      <button class="nav-group-toggle" type="button" aria-expanded="true" aria-controls="nav-escrever">Escrever<span class="nav-group-chevron" aria-hidden="true">⌄</span></button>
+      <div class="nav-group-links" id="nav-escrever">
+        <button class="nav-link active" data-section="inicio" type="button">desabafar</button>
+        <button class="nav-link" data-section="historias" type="button">meus registros</button>
+        <button class="nav-link" data-section="galeria" type="button">fotos & sons</button>
+        <button class="nav-link" data-section="escrita" type="button">escrita profunda</button>
+      </div>
+    </div>
+    <div class="nav-group">
+      <button class="nav-group-toggle" type="button" aria-expanded="false" aria-controls="nav-cuidado">Cuidar de mim<span class="nav-group-chevron" aria-hidden="true">⌄</span></button>
+      <div class="nav-group-links" id="nav-cuidado">
+        <button class="nav-link" data-section="pausa" type="button">minha pausa</button>
+        <button class="nav-link" data-section="refugio" type="button">refúgio sensorial</button>
+        <button class="nav-link" data-section="kit" type="button">kit de acolhimento</button>
+        <button class="nav-link" data-section="ritual" type="button">ritual do dia</button>
+        <button class="nav-link" data-section="clima" type="button">clima interior</button>
+      </div>
+    </div>
+    <div class="nav-group">
+      <button class="nav-group-toggle" type="button" aria-expanded="false" aria-controls="nav-memorias">Minhas memórias<span class="nav-group-chevron" aria-hidden="true">⌄</span></button>
+      <div class="nav-group-links" id="nav-memorias">
+        <button class="nav-link" data-section="capsula" type="button">cápsula do tempo</button>
+        <button class="nav-link" data-section="linha-do-tempo" type="button">linha do tempo</button>
+        <button class="nav-link" data-section="constelacao" type="button">constelação</button>
+        <button class="nav-link" data-section="eu-passado" type="button">eu do passado</button>
+        <button class="nav-link" data-section="museu" type="button">museu pessoal</button>
+        <button class="nav-link" data-section="mensagens" type="button">palavras para mim</button>
+      </div>
+    </div>
+    <div class="nav-group">
+      <button class="nav-group-toggle" type="button" aria-expanded="false" aria-controls="nav-privacidade">Privacidade<span class="nav-group-chevron" aria-hidden="true">⌄</span></button>
+      <div class="nav-group-links" id="nav-privacidade">
+        <button class="nav-link" data-section="privacidade" type="button">backup & proteção</button>
+      </div>
+    </div>
+    <div class="privacy-pill menu-privacy-pill" title="Os dados deste site ficam neste navegador"><span class="dot"></span> local neste dispositivo</div>
+  </nav>
   </header>
 
   <main id="inicio" class="page">
@@ -62,6 +83,7 @@
         <p class="eyebrow">sem pressa · sem julgamento</p>
         <h1>Você não precisa<br><em>segurar tudo sozinho.</em></h1>
         <p class="hero-text">Escreva o que está passando pela sua cabeça. Grave sua voz. Guarde uma foto. Aqui, as coisas podem simplesmente existir sem precisar de uma explicação bonita.</p>
+        <a class="hero-cta" href="#entryText">Começar a escrever <span aria-hidden="true">↓</span></a>
       </div>
       <div class="hero-symbol" aria-hidden="true"><span>“</span></div>
     </section>

@@ -20,6 +20,13 @@
       return;
     }
 
+    const parentGroup = button && button.closest('.nav-group');
+    if (parentGroup) {
+      parentGroup.classList.add('is-open');
+      const disclosure = parentGroup.querySelector('.nav-group-toggle');
+      if (disclosure) disclosure.setAttribute('aria-expanded', 'true');
+    }
+
     if (typeof window.switchSection === 'function') {
       // Reuse the main controller so records and media refresh when those pages are opened.
       window.switchSection(sectionId);
@@ -48,6 +55,15 @@
 
   // Delegação de eventos: cada item continua navegando mesmo se outro script de recurso falhar.
   nav.addEventListener('click', (event) => {
+    const disclosure = event.target.closest ? event.target.closest('.nav-group-toggle') : null;
+    if (disclosure && nav.contains(disclosure)) {
+      event.preventDefault();
+      const group = disclosure.closest('.nav-group');
+      const opening = !group.classList.contains('is-open');
+      group.classList.toggle('is-open', opening);
+      disclosure.setAttribute('aria-expanded', String(opening));
+      return;
+    }
     const button = event.target.closest ? event.target.closest('.nav-link') : null;
     if (!button || !nav.contains(button)) return;
     event.preventDefault();
