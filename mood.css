@@ -103,3 +103,10 @@
   .mood-options { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .mood-option { min-height: 74px; }
 }
+
+
+/* Remove the dashboard feel from mood history. */
+.reflection-box, .breath-section { border-radius: 6px; box-shadow: none; }
+.mood-day { border-radius: 4px; }
+.mood-history-emoji { border-radius: 4px; box-shadow: none; }
+.mood-history-item { border-radius: 4px; box-shadow: none; }
