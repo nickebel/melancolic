@@ -1606,7 +1606,7 @@ const REFUGE_ARTWORK = String.raw`<svg class="scene-art scene-art--night" viewBo
     $('#ambienceVolume').addEventListener('input', updateAmbientVolume);
     $('#saveRefugePresetButton').addEventListener('click', saveRefugePreset);
     $('#loadRefugePresetButton').addEventListener('click', loadRefugePreset);
-    ensureRefugeArtwork();
+    selectScene($('#refugeScene')?.dataset.scene || 'night');
     const personalRefuge=readObject(REFUGE_PERSONAL_KEY)||{};
     setRefugeAccent(personalRefuge.accent||'#82b3a2');setRefugePhrase(personalRefuge.phrase||'');
     const savedPresets=readRefugePresets(),savedPreset=savedPresets[savedPresets.length-1]||readObject(REFUGE_KEY);
