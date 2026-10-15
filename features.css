@@ -418,3 +418,211 @@ button,.tool-button,.save-button { border-radius:13px; }
   .topbar .nav { width: calc(100vw - 20px); }
   .scene-option { padding-inline: 4px; }
 }
+
+
+/* Editorial treatment: less dashboard, more notebook. */
+/* Menu groups are plain dividers, not stacked UI cards. */
+.topbar .nav {
+  width: min(320px, calc(100vw - 24px));
+  gap: 0;
+  padding: 14px 18px;
+  border: 1px solid rgba(192,211,201,.18);
+  border-radius: 7px;
+  background: #0a1b1f;
+  box-shadow: 0 16px 32px rgba(0,0,0,.25);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.nav-group {
+  border: 0;
+  border-bottom: 1px solid rgba(192,211,201,.17);
+  border-radius: 0;
+  background: transparent;
+}
+.nav-group-toggle {
+  min-height: 43px;
+  padding: 10px 1px;
+  color: #a9b9af;
+  background: transparent;
+  border-radius: 0;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-group-toggle:hover { color: #e0e6df; background: transparent; }
+.nav-group-chevron { font-size: 15px; color: #d1aa84; }
+.nav-group-links { padding: 1px 0 9px 9px; gap: 1px; }
+.topbar .nav-group .nav-link {
+  min-height: 37px;
+  padding: 8px 11px;
+  border: 0;
+  border-left: 2px solid transparent;
+  border-radius: 0;
+  color: #a2b1a9;
+  background: transparent;
+  font-size: 12px;
+  letter-spacing: 0;
+}
+.topbar .nav-group .nav-link:hover {
+  color: #e1e8df;
+  background: rgba(178,201,186,.045);
+}
+.topbar .nav-group .nav-link.active {
+  color: #e1e8df;
+  background: rgba(178,201,186,.055);
+  border: 0;
+  border-left: 2px solid #a9c0ae;
+}
+.menu-privacy-pill {
+  justify-content: flex-start;
+  padding-top: 13px;
+  font-size: 10px;
+  color: #91a69b;
+}
+.refuge-scene {
+  border-radius: 5px;
+  box-shadow: none;
+}
+.refuge-scene-copy h2,
+.extras-intro h1,
+.pause-intro h1,
+.extras-intro h1 em,
+.pause-intro h1 em {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  letter-spacing: -.035em;
+}
+.extras-intro h1, .pause-intro h1 {
+  font-size: clamp(39px, 6vw, 64px);
+  line-height: 1.08;
+}
+.extras-intro h1 em, .pause-intro h1 em {
+  color: #b4c5b8;
+  font-style: italic;
+}
+.extras-intro > p:last-child, .pause-intro > p:last-child {
+  color: #b2c0b8;
+  max-width: 61ch;
+  line-height: 1.85;
+}
+.extra-card, .refuge-controls, .pause-card, .writing-card, .creative-card {
+  border-radius: 7px;
+  background: #0d2024;
+  border-color: rgba(192,211,201,.17);
+  box-shadow: none;
+}
+.extra-card h2, .refuge-controls h2, .creative-card h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 23px;
+  font-weight: 400;
+  letter-spacing: -.01em;
+}
+.scene-option, .ambience-option, .mood-option {
+  border-radius: 5px;
+  box-shadow: none;
+}
+.scene-option, .ambience-option {
+  border-color: rgba(192,211,201,.18);
+  background: #0a1b1f;
+}
+.scene-option.is-active, .ambience-option.is-active {
+  border-color: #91ab9a;
+  background: #142b2d;
+  color: #e0e6df;
+}
+.refuge-controls .extra-divider { background: rgba(192,211,201,.18); }
+.refuge-preset-library, .timeline-filters, .capsule-card, .timeline-card {
+  border-radius: 5px;
+  box-shadow: none;
+}
+.timeline-card {
+  background: #0c2023;
+  border: 0;
+  border-bottom: 1px solid rgba(192,211,201,.2);
+  padding: 19px 15px;
+}
+.timeline-card::before { box-shadow: none; }
+.timeline-kind { border-radius: 3px; }
+.extra-action-row .save-button { box-shadow: none; }
+@media (max-width: 680px) {
+  .topbar .nav { width: min(320px, calc(100vw - 22px)); }
+  .extras-intro { padding-bottom: 27px; }
+  .extra-card, .pause-card { padding: 21px 17px; }
+}
+
+
+/* Flatten decorative UI into a consistent notebook surface. */
+.menu-toggle {
+  border-radius: 4px;
+  border: 1px solid rgba(192,211,201,.26);
+  background: transparent;
+  box-shadow: none;
+}
+.menu-toggle:hover, .menu-toggle:focus-visible {
+  background: rgba(178,201,186,.06);
+  border-color: #91ab9a;
+  box-shadow: none;
+}
+.topbar .nav { border-radius: 4px; box-shadow: 0 12px 24px rgba(0,0,0,.18); }
+.kit-callout, .capsule-card, .message-surprise, .past-memory-card,
+.constellation-detail, .museum-memory, .personal-message-card,
+.weather-history-item, .timeline-empty-filter, .refuge-preset-library,
+.timeline-filters, .writing-card, .creative-card {
+  background: #0d2024;
+  border-radius: 5px;
+  box-shadow: none;
+  border-color: rgba(192,211,201,.17);
+}
+.kit-callout {
+  border-left: 2px solid #8ca595;
+  background: #0d2024;
+}
+.kit-callout-mark {
+  border-radius: 3px;
+  background: transparent;
+  border-color: rgba(192,211,201,.28);
+  color: #c1d0c3;
+}
+.capsule-card { border: 0; border-bottom: 1px solid rgba(192,211,201,.2); }
+.capsule-state, .museum-collection-chip, .message-delete, .timeline-kind {
+  border-radius: 3px;
+  box-shadow: none;
+}
+.museum-collection-chip { background: transparent; }
+.weather-option, .refuge-mood-preset, .ritual-step-number,
+.refuge-color-field input[type="color"], .refuge-personal-phrase,
+.refuge-controls .field input[type="text"], .ritual-field textarea,
+.museum-assignment, .timeline-media img, .museum-media-item img {
+  border-radius: 5px;
+  box-shadow: none;
+}
+.refuge-personal-phrase { backdrop-filter: none; -webkit-backdrop-filter: none; }
+.refuge-mood-preset, .weather-option {
+  background: #0a1b1f;
+  border-color: rgba(192,211,201,.17);
+}
+.refuge-mood-preset:hover, .weather-option:hover { transform: none; }
+.refuge-mood-preset > span:first-child { border-radius: 3px; background: transparent; }
+.ritual-step-number { background: #162b2d; }
+.field input[type="date"], .timeline-filters select,
+.timeline-filters input[type="month"], .timeline-filters input[type="search"],
+.field select, .museum-assignment {
+  border-radius: 5px;
+  box-shadow: none;
+}
+.tool-button {
+  border-radius: 5px;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+}
+.tool-button:hover { background: rgba(178,201,186,.06); transform: none; }
+.save-button { border-radius: 5px; box-shadow: none; }
+.extra-action-row .save-button:hover { transform: none; }
+.timeline-card::before { box-shadow: none; }
+@media (max-width: 680px) {
+  .kit-callout { padding: 18px; gap: 12px; }
+  .kit-callout-mark { flex-basis: 30px; width: 30px; height: 30px; }
+  .timeline-card { margin-left: 28px; }
+}
