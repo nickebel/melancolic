@@ -16,7 +16,7 @@
   <title>Entre o silêncio — meu espaço</title>
   <link rel="stylesheet" href="style.css?v=apple-inspired-sage-20261015-v2">
   <link rel="stylesheet" href="mood.css?v=apple-inspired-sage-20261015-v2">
-  <link rel="stylesheet" href="features.css?v=apple-inspired-sage-20261015-v2">
+  <link rel="stylesheet" href="features.css?v=refuge-scenes-audio-20261015-v1">
 </head>
 <body>
   <a class="skip-link" href="#inicio">Pular para o conteúdo</a>
@@ -353,6 +353,7 @@
             <button type="button" class="scene-option" data-scene="sea" aria-pressed="false"><span aria-hidden="true">≈</span><span>mar</span></button>
             <button type="button" class="scene-option" data-scene="mist" aria-pressed="false"><span aria-hidden="true">☁</span><span>névoa</span></button>
             <button type="button" class="scene-option" data-scene="forest" aria-pressed="false"><span aria-hidden="true">♧</span><span>floresta</span></button>
+            <button type="button" class="scene-option" data-scene="brook" aria-pressed="false"><span aria-hidden="true">⌁</span><span>riacho</span></button>
             <button type="button" class="scene-option" data-scene="sunset" aria-pressed="false"><span aria-hidden="true">◒</span><span>pôr do sol</span></button>
             <button type="button" class="scene-option" data-scene="aurora" aria-pressed="false"><span aria-hidden="true">✧</span><span>aurora</span></button>
             <button type="button" class="scene-option" data-scene="cabin" aria-pressed="false"><span aria-hidden="true">⌂</span><span>cabana</span></button>
@@ -362,13 +363,13 @@
           <p class="eyebrow">escolha o som</p>
           <h2>O que você quer ouvir?</h2>
           <div class="ambience-options" id="ambienceOptions" role="group" aria-label="Escolha o som ambiente">
-            <button type="button" class="ambience-option is-active" data-ambience="rain" aria-pressed="true"><span aria-hidden="true">☂</span><strong>chuva</strong><small>textura suave</small></button>
-            <button type="button" class="ambience-option" data-ambience="ocean" aria-pressed="false"><span aria-hidden="true">≈</span><strong>mar</strong><small>movimento lento</small></button>
-            <button type="button" class="ambience-option" data-ambience="wind" aria-pressed="false"><span aria-hidden="true">〰</span><strong>vento</strong><small>brisa profunda</small></button>
-            <button type="button" class="ambience-option" data-ambience="forest" aria-pressed="false"><span aria-hidden="true">♧</span><strong>folhas</strong><small>ruído de floresta</small></button>
-            <button type="button" class="ambience-option" data-ambience="brook" aria-pressed="false"><span aria-hidden="true">﹏</span><strong>riacho</strong><small>água corrente</small></button>
-            <button type="button" class="ambience-option" data-ambience="embers" aria-pressed="false"><span aria-hidden="true">✹</span><strong>brasa suave</strong><small>calor distante</small></button>
-            <button type="button" class="ambience-option" data-ambience="night" aria-pressed="false"><span aria-hidden="true">✦</span><strong>noite</strong><small>sons bem sutis</small></button>
+            <button type="button" class="ambience-option is-active" data-ambience="rain" aria-pressed="true"><span aria-hidden="true">☂</span><strong>chuva</strong><small>chuva ambiente gravada</small></button>
+            <button type="button" class="ambience-option" data-ambience="ocean" aria-pressed="false"><span aria-hidden="true">≈</span><strong>mar</strong><small>ondas na costa</small></button>
+            <button type="button" class="ambience-option" data-ambience="wind" aria-pressed="false"><span aria-hidden="true">〰</span><strong>vento</strong><small>vento nas árvores</small></button>
+            <button type="button" class="ambience-option" data-ambience="forest" aria-pressed="false"><span aria-hidden="true">♧</span><strong>floresta</strong><small>aves, insetos e folhas</small></button>
+            <button type="button" class="ambience-option" data-ambience="brook" aria-pressed="false"><span aria-hidden="true">﹏</span><strong>riacho</strong><small>água sobre pedras</small></button>
+            <button type="button" class="ambience-option" data-ambience="embers" aria-pressed="false"><span aria-hidden="true">✹</span><strong>brasa suave</strong><small>madeira estalando</small></button>
+            <button type="button" class="ambience-option" data-ambience="night" aria-pressed="false"><span aria-hidden="true">✦</span><strong>noite</strong><small>ambiente noturno</small></button>
             <button type="button" class="ambience-option" data-ambience="white" aria-pressed="false"><span aria-hidden="true">∿</span><strong>ruído uniforme</strong><small>sem grandes variações</small></button>
           </div>
           <label class="volume-control" for="ambienceVolume"><span>volume</span><output id="ambienceVolumeLabel" for="ambienceVolume">25%</output><input id="ambienceVolume" type="range" min="0" max="60" step="5" value="25"></label>
@@ -393,7 +394,8 @@
           </div>
           <p id="refugePresetStatus" class="feature-status" role="status" aria-live="polite"></p>
           <p id="refugePresetSummary" class="feature-footnote">Você ainda não salvou uma combinação pessoal.</p>
-          <p class="feature-footnote">As texturas sonoras são sintetizadas pelo navegador; não são gravações de campo. Nada toca sem você iniciar.</p>
+          <p class="feature-footnote">Os sons de chuva, mar, vento, floresta, riacho, brasa e noite são gravações ambientais e precisam de conexão. O ruído uniforme é gerado no navegador. Nada toca sem você iniciar.</p>
+          <details class="audio-credits"><summary>créditos das gravações</summary><p>Vento entre árvores: <a href="https://commons.wikimedia.org/wiki/File:Daniel_Birch_-_03_-_Trees_In_The_Wind.ogg" target="_blank" rel="noreferrer">Daniel Birch</a>, licença <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a>. Ondas do mar: <a href="https://commons.wikimedia.org/wiki/File:Oceanwavescrushing.ogg" target="_blank" rel="noreferrer">Luftrum</a>, licença <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noreferrer">CC BY 3.0</a>. Fogueira: <a href="https://commons.wikimedia.org/wiki/File:Campfire_sound_ambience.ogg" target="_blank" rel="noreferrer">Glaneur de sons</a>, licença <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noreferrer">CC BY 3.0</a>. Chuva: <a href="https://commons.wikimedia.org/wiki/File:Rain_(1).ogg" target="_blank" rel="noreferrer">ezwa</a>; floresta: <a href="https://commons.wikimedia.org/wiki/File:20090610_0_ambience.ogg" target="_blank" rel="noreferrer">nille</a>; água corrente: <a href="https://commons.wikimedia.org/wiki/File:Flowing-water-100019.ogg" target="_blank" rel="noreferrer">Fg2</a>; noite: <a href="https://commons.wikimedia.org/wiki/File:Country_night_noise.ogg" target="_blank" rel="noreferrer">hc</a> — gravações disponibilizadas em domínio público.</p></details>
         </div>
       </section>
     </div>
@@ -545,7 +547,7 @@
 
   <script src="script.js?v=refuge-design-20261013-v5"></script>
   <script src="mood.js?v=refuge-design-20261013-v5"></script>
-  <script src="features.js?v=refuge-design-20261013-v5"></script>
+  <script src="features.js?v=refuge-scenes-audio-20261015-v1"></script>
   <script src="navigation.js?v=refuge-design-20261013-v5"></script>
 </body>
 </html>
