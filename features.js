@@ -28,24 +28,29 @@
     irritado: { label: 'irritado', emoji: '✳' }
   };
   const SCENES = {
-    night: { title: 'Noite tranquila', description: 'Um céu escuro, luz suave e espaço para respirar.' },
-    sea: { title: 'Perto do mar', description: 'O horizonte se abre e tudo parece poder esperar um pouco.' },
-    mist: { title: 'Entre a névoa', description: 'Formas suaves, silêncio e nenhum lugar para chegar depressa.' },
-    forest: { title: 'No meio da floresta', description: 'Tons profundos e um abrigo imaginado entre as árvores.' },
-    sunset: { title: 'Depois do pôr do sol', description: 'Um céu morno, como o final de um dia que pode descansar.' },
-    aurora: { title: 'Sob uma aurora', description: 'Luzes suaves no escuro, movimento lento e espaço para imaginar.' },
-    cabin: { title: 'Uma cabana quieta', description: 'Um canto protegido do lado de fora, com espaço para recolher-se.' },
-    rain: { title: 'Perto de uma janela chuvosa', description: 'A chuva fica do lado de fora; você pode permanecer aqui dentro.' }
+    night: { title: 'Noite tranquila', description: 'Um céu estrelado, luz baixa e espaço para respirar.' },
+    sea: { title: 'Perto do mar', description: 'Ondas que chegam e recuam num ritmo que não precisa ser apressado.' },
+    mist: { title: 'Entre a névoa', description: 'Colinas distantes e faixas de neblina que passam devagar.' },
+    forest: { title: 'No meio da floresta', description: 'Árvores altas, folhas em movimento e pequenos sons entre os galhos.' },
+    brook: { title: 'À beira de um riacho', description: 'Água correndo entre pedras, vegetação nas margens e reflexos em movimento.' },
+    sunset: { title: 'Depois do pôr do sol', description: 'O sol repousa atrás das colinas e o céu fica dourado.' },
+    aurora: { title: 'Sob uma aurora', description: 'Faixas de luz atravessam o céu noturno sem pressa.' },
+    cabin: { title: 'Uma cabana quieta', description: 'Uma cabana de madeira entre pinheiros, com uma janela acesa.' },
+    rain: { title: 'Perto de uma janela chuvosa', description: 'Gotas descem pelo vidro enquanto a luz permanece acolhedora do lado de dentro.' }
   };
   const AMBIENCES = {
-    rain: { label: 'chuva suave', filter: 'highpass', cutoff: 650, level: 0.38, modulation: 0.008, rate: 0.12 },
-    ocean: { label: 'mar', filter: 'lowpass', cutoff: 680, level: 0.42, modulation: 0.10, rate: 0.075 },
-    wind: { label: 'vento', filter: 'lowpass', cutoff: 330, level: 0.40, modulation: 0.06, rate: 0.11 },
-    forest: { label: 'folhas', filter: 'bandpass', cutoff: 1450, level: 0.14, modulation: 0.018, rate: 0.17 },
-    brook: { label: 'riacho', filter: 'bandpass', cutoff: 980, level: 0.22, modulation: 0.045, rate: 0.22 },
-    embers: { label: 'brasa suave', filter: 'bandpass', cutoff: 560, level: 0.14, modulation: 0.035, rate: 1.25 },
-    night: { label: 'noite sutil', filter: 'highpass', cutoff: 1950, level: 0.08, modulation: 0.022, rate: 1.45 },
-    white: { label: 'ruído uniforme', filter: 'lowpass', cutoff: 1750, level: 0.13, modulation: 0.008, rate: 0.04 }
+    rain: { label: 'chuva', description: 'chuva ambiente gravada', src: 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Rain_%281%29.ogg' },
+    ocean: { label: 'mar', description: 'ondas quebrando suavemente na costa', src: 'https://upload.wikimedia.org/wikipedia/commons/f/f1/Oceanwavescrushing.ogg' },
+    wind: { label: 'vento', description: 'vento passando pelas árvores', src: 'https://upload.wikimedia.org/wikipedia/commons/e/eb/Daniel_Birch_-_03_-_Trees_In_The_Wind.ogg' },
+    forest: { label: 'floresta', description: 'aves, insetos e vento entre as árvores', src: 'https://upload.wikimedia.org/wikipedia/commons/0/0a/20090610_0_ambience.ogg' },
+    brook: { label: 'riacho', description: 'água corrente sobre pedras', src: 'https://upload.wikimedia.org/wikipedia/commons/2/26/Flowing-water-100019.ogg' },
+    embers: { label: 'brasa suave', description: 'madeira estalando em fogo baixo', src: 'https://upload.wikimedia.org/wikipedia/commons/8/80/Bones_breaking_wood_fire_ice_crackling.ogg' },
+    night: { label: 'noite', description: 'sons distantes de uma noite calma', src: 'https://upload.wikimedia.org/wikipedia/commons/f/fb/Country_night_noise.ogg' },
+    white: { label: 'ruído uniforme', description: 'som contínuo, sem grandes variações', src: null, filter: 'lowpass', cutoff: 1700, level: 0.13 }
+  };
+  const SCENE_AMBIENCE = {
+    night: 'night', sea: 'ocean', mist: 'wind', forest: 'forest',
+    brook: 'brook', sunset: 'wind', aurora: 'night', cabin: 'embers', rain: 'rain'
   };
   const SUGGESTIONS = [
     'Solte os ombros e perceba o apoio da cadeira ou do chão.',
@@ -60,6 +65,7 @@
   const $ = (selector) => document.querySelector(selector);
   const $$ = (selector) => Array.from(document.querySelectorAll(selector));
   let selectedAmbience = 'rain';
+  let audioPlayer = null;
   let audioContext = null;
   let noiseSource = null;
   let ambientFilter = null;
@@ -229,9 +235,81 @@
     }
   }
 
-  // Sensory refuge: visual scenes + procedural ambient noise generated by Web Audio.
-  function selectScene(scene) {
+  // Sensory refuge: illustrated scenery and field-recorded ambient audio.
+const REFUGE_ARTWORK = String.raw`<svg class="scene-art scene-art--night" viewBox="0 0 480 600" preserveAspectRatio="xMidYMid slice" focusable="false">
+  <g class="stars"><circle class="twinkle" cx="45" cy="76" r="2"/><circle class="twinkle" cx="112" cy="132" r="1.5" style="--delay:1.1s"/><circle class="twinkle" cx="184" cy="74" r="1.7" style="--delay:2s"/><circle class="twinkle" cx="275" cy="128" r="1.4" style="--delay:.5s"/><circle class="twinkle" cx="338" cy="72" r="2" style="--delay:1.7s"/><circle class="twinkle" cx="430" cy="155" r="1.6" style="--delay:2.6s"/></g>
+  <circle class="night-moon" cx="365" cy="128" r="39"/><circle cx="380" cy="111" r="34" fill="#172f36"/>
+  <path d="M0 408 Q92 348 180 407 T360 398 T520 390 V640 H0Z" fill="#163733"/><path d="M0 470 Q130 406 248 470 T520 455 V640 H0Z" fill="#0e2927"/><path d="M0 525 Q100 486 214 523 T520 514 V640 H0Z" fill="#0a201f"/>
+  <circle class="firefly" cx="110" cy="415" r="2.5"/><circle class="firefly" cx="335" cy="455" r="2"/><circle class="firefly" cx="275" cy="372" r="1.8"/>
+</svg>
+<svg class="scene-art scene-art--sea" viewBox="0 0 480 600" preserveAspectRatio="xMidYMid slice" focusable="false">
+  <circle class="sea-moon" cx="346" cy="156" r="35"/><path d="M0 306 Q120 299 240 306 T480 304" stroke="#b8d4d1" stroke-opacity=".55" stroke-width="1.5" fill="none"/>
+  <path d="M0 350 Q70 330 140 350 T280 350 T420 350 T560 350 V640 H0Z" fill="#275e63" opacity=".76"/>
+  <path d="M-50 402 Q0 378 50 402 T150 402 T250 402 T350 402 T450 402 T550 402" class="wave-line wave-line--one"/>
+  <path d="M-60 445 Q0 423 60 445 T180 445 T300 445 T420 445 T540 445" class="wave-line wave-line--two"/>
+  <path d="M-40 493 Q20 471 80 493 T200 493 T320 493 T440 493 T560 493" class="wave-line wave-line--three"/>
+  <path d="M-70 542 Q0 519 70 542 T210 542 T350 542 T490 542" class="wave-line wave-line--four"/><path d="M0 574 Q120 550 230 575 T500 565 V640 H0Z" fill="#0d323b" opacity=".8"/>
+</svg>
+<svg class="scene-art scene-art--mist" viewBox="0 0 480 600" preserveAspectRatio="xMidYMid slice" focusable="false">
+  <circle class="mist-sun" cx="238" cy="196" r="55"/><path d="M-20 390 L85 270 L145 347 L228 238 L316 350 L385 278 L505 405 V640 H-20Z" fill="#718a84" opacity=".35"/>
+  <path d="M-20 442 L75 358 L148 408 L245 323 L327 418 L418 345 L510 440 V640 H-20Z" fill="#405f58" opacity=".78"/><path d="M-20 489 Q75 456 160 490 T340 487 T520 484 V640 H-20Z" fill="#243f39"/>
+  <g class="fog-layer fog-layer--one"><ellipse cx="100" cy="340" rx="190" ry="24"/><ellipse cx="365" cy="367" rx="190" ry="28"/></g><g class="fog-layer fog-layer--two"><ellipse cx="210" cy="430" rx="230" ry="22"/><ellipse cx="470" cy="456" rx="170" ry="18"/></g>
+</svg>
+<svg class="scene-art scene-art--forest" viewBox="0 0 480 600" preserveAspectRatio="xMidYMid slice" focusable="false">
+  <circle class="forest-light" cx="270" cy="148" r="66"/><path d="M0 355 Q90 295 165 355 T325 345 T500 350 V640 H0Z" fill="#264b3d" opacity=".75"/>
+  <g class="tree tree--far"><path d="M45 630 L45 310 L70 310 L70 630Z M-7 390 L57 245 L120 390Z M2 333 L57 200 L114 333Z M14 280 L57 162 L101 280Z" fill="#245341"/><path d="M380 630 L380 305 L405 305 L405 630Z M320 390 L392 226 L460 390Z M332 328 L392 183 L452 328Z M346 272 L392 135 L438 272Z" fill="#285844"/></g>
+  <g class="tree tree--left"><path d="M80 640 L80 278 L104 278 L104 640Z M22 414 L92 222 L162 414Z M32 340 L92 178 L151 340Z M42 273 L92 125 L142 273Z" fill="#1c4935"/></g>
+  <g class="tree tree--right"><path d="M365 640 L365 260 L395 260 L395 640Z M302 400 L380 193 L458 400Z M315 322 L380 148 L445 322Z M329 254 L380 102 L431 254Z" fill="#1e4d37"/></g>
+  <path d="M0 530 Q115 470 220 528 T480 514 V640 H0Z" fill="#0b2823"/><g class="leaf-specks"><circle cx="176" cy="268" r="3"/><circle cx="230" cy="335" r="2"/><circle cx="287" cy="296" r="2.5"/><circle cx="202" cy="405" r="2"/><circle cx="315" cy="435" r="2.5"/></g>
+</svg>
+<svg class="scene-art scene-art--brook" viewBox="0 0 480 600" preserveAspectRatio="xMidYMid slice" focusable="false">
+  <circle class="brook-light" cx="282" cy="128" r="49"/><path d="M0 327 Q55 282 118 326 T235 322 T355 318 T500 310 V640 H0Z" fill="#28533e"/>
+  <g class="brook-tree brook-tree--left"><path d="M34 640 L34 268 L55 268 L55 640Z M-18 396 L45 223 L108 396Z M-7 325 L45 173 L97 325Z M87 640 L87 320 L106 320 L106 640Z M47 416 L96 278 L145 416Z M53 350 L96 221 L139 350Z" fill="#2c6344"/></g>
+  <g class="brook-tree brook-tree--right"><path d="M409 640 L409 264 L431 264 L431 640Z M348 400 L420 206 L490 400Z M357 330 L420 161 L483 330Z" fill="#2c6344"/></g>
+  <path d="M154 332 C212 378 260 393 240 444 C220 494 270 531 298 600 H188 C168 548 123 504 160 451 C191 408 160 376 112 350Z" fill="#2e7c83"/>
+  <path d="M172 343 C220 386 275 397 251 451 C229 502 283 541 308 600" class="brook-current brook-current--one"/><path d="M138 365 C191 410 235 408 214 458 C196 502 245 546 269 589" class="brook-current brook-current--two"/>
+  <path d="M0 515 Q82 481 155 526 T325 514 T500 519 V640 H0Z" fill="#14382e" opacity=".7"/><g class="brook-stones"><ellipse cx="132" cy="480" rx="19" ry="9"/><ellipse cx="316" cy="505" rx="21" ry="11"/><ellipse cx="170" cy="552" rx="15" ry="8"/><ellipse cx="332" cy="575" rx="18" ry="9"/></g>
+  <g class="brook-reeds"><path d="M370 550 Q345 500 360 457 M388 575 Q398 525 382 490 M112 548 Q95 515 104 477" fill="none" stroke="#88ad79" stroke-width="4" stroke-linecap="round"/></g>
+</svg>
+<svg class="scene-art scene-art--sunset" viewBox="0 0 480 600" preserveAspectRatio="xMidYMid slice" focusable="false">
+  <circle class="sunset-sun" cx="270" cy="280" r="86"/><path d="M0 385 L80 331 L137 375 L227 302 L302 372 L375 323 L500 402 V640 H0Z" fill="#76545a" opacity=".75"/>
+  <path d="M0 443 L87 388 L162 431 L258 365 L358 445 L432 396 L500 433 V640 H0Z" fill="#4c454d"/><path d="M0 505 Q111 459 223 505 T500 496 V640 H0Z" fill="#303d3c"/><path d="M0 557 Q110 526 240 557 T500 547 V640 H0Z" fill="#1a302d"/>
+  <g class="sunset-cloud sunset-cloud--one"><path d="M45 215 Q68 183 98 206 Q122 170 158 205 Q180 207 184 227 H48Z" fill="#efc0a1" opacity=".28"/></g><g class="sunset-cloud sunset-cloud--two"><path d="M308 185 Q335 160 357 183 Q382 155 406 188 H312Z" fill="#f2c6a8" opacity=".26"/></g>
+</svg>
+<svg class="scene-art scene-art--aurora" viewBox="0 0 480 600" preserveAspectRatio="xMidYMid slice" focusable="false">
+  <g class="stars"><circle class="twinkle" cx="48" cy="117" r="2"/><circle class="twinkle" cx="145" cy="69" r="1.4" style="--delay:1s"/><circle class="twinkle" cx="239" cy="137" r="1.7" style="--delay:2s"/><circle class="twinkle" cx="422" cy="110" r="2" style="--delay:.7s"/><circle class="twinkle" cx="387" cy="240" r="1.4" style="--delay:1.9s"/></g>
+  <path class="aurora-ribbon aurora-ribbon--one" d="M-80 290 C60 76 135 154 215 244 S370 354 560 102 L560 204 C387 407 310 330 205 275 S61 211 -80 365Z" fill="#6bbda3" opacity=".42"/>
+  <path class="aurora-ribbon aurora-ribbon--two" d="M-70 340 C80 170 150 193 250 275 S415 323 555 183 L555 247 C408 392 317 345 239 318 S81 273 -70 399Z" fill="#8e8dd1" opacity=".29"/>
+  <path class="aurora-ribbon aurora-ribbon--three" d="M-80 230 C45 105 122 122 198 203 S352 264 530 150 L530 189 C372 329 285 283 192 236 S54 188 -80 284Z" fill="#9ad7c1" opacity=".24"/>
+  <path d="M0 472 Q105 410 200 472 T480 458 V640 H0Z" fill="#17332f"/><path d="M0 525 Q120 481 250 522 T500 510 V640 H0Z" fill="#0b211f"/>
+</svg>
+<svg class="scene-art scene-art--cabin" viewBox="0 0 480 600" preserveAspectRatio="xMidYMid slice" focusable="false">
+  <g class="cabin-pines"><path d="M22 500 L76 350 L130 500Z M30 442 L76 286 L122 442Z M330 485 L388 315 L446 485Z M342 415 L388 260 L434 415Z" fill="#214b3c"/><path d="M63 600 L63 424 L84 424 L84 600Z M382 600 L382 403 L402 403 L402 600Z" fill="#18392f"/></g>
+  <g class="smoke"><circle class="smoke-puff" cx="279" cy="210" r="12"/><circle class="smoke-puff" cx="290" cy="183" r="16"/><circle class="smoke-puff" cx="281" cy="151" r="19"/></g>
+  <path d="M123 375 L246 279 L367 375 V504 H123Z" fill="#644d3b"/><path d="M99 380 L247 257 L390 380 L370 392 L247 298 L120 394Z" fill="#332f2b"/><path d="M150 390 H341 V504 H150Z" fill="#7a5a40"/>
+  <path d="M246 299 L246 504" stroke="#4c3a2e" stroke-width="7"/><rect x="174" y="405" width="46" height="50" rx="2" fill="#f0bf73" class="cabin-window"/><rect x="267" y="405" width="46" height="50" rx="2" fill="#f0bf73" class="cabin-window"/>
+  <path d="M197 405 V455 M174 430 H220 M290 405 V455 M267 430 H313" stroke="#654733" stroke-width="4"/><path d="M0 520 Q120 484 230 519 T500 510 V640 H0Z" fill="#17332b"/>
+</svg>
+<svg class="scene-art scene-art--rain" viewBox="0 0 480 600" preserveAspectRatio="xMidYMid slice" focusable="false">
+  <rect x="45" y="70" width="390" height="425" rx="5" fill="#90aab0" fill-opacity=".07" stroke="#9db8bd" stroke-opacity=".45" stroke-width="6"/><path d="M240 70 V495 M45 282 H435" stroke="#9db8bd" stroke-opacity=".32" stroke-width="4"/>
+  <rect x="57" y="82" width="171" height="190" fill="#b4d2d0" fill-opacity=".06"/><rect x="253" y="82" width="170" height="190" fill="#b4d2d0" fill-opacity=".04"/>
+  <g class="rain-streaks"><path class="rain-streak" d="M86 -20 l-10 35 M126 20 l-10 35 M187 -12 l-10 35 M222 75 l-10 35 M292 -14 l-10 35 M335 30 l-10 35 M391 -8 l-10 35 M153 113 l-10 35 M63 170 l-10 35 M275 160 l-10 35 M360 190 l-10 35 M106 256 l-10 35 M202 232 l-10 35 M318 258 l-10 35 M409 294 l-10 35 M155 333 l-10 35 M250 356 l-10 35 M365 376 l-10 35 M94 411 l-10 35 M298 433 l-10 35"/></g>
+  <path d="M0 512 Q120 474 240 512 T500 502 V640 H0Z" fill="#192f31"/>
+</svg>`;
+
+  function ensureRefugeArtwork() {
+    const preview = $('#refugeScene');
+    if (!preview || preview.querySelector('.refuge-artwork')) return;
+    const artwork = document.createElement('div');
+    artwork.className = 'refuge-artwork';
+    artwork.setAttribute('aria-hidden', 'true');
+    artwork.innerHTML = REFUGE_ARTWORK;
+    preview.insertBefore(artwork, preview.firstChild);
+  }
+
+  function selectScene(scene, suggestSound = true) {
     if (!SCENES[scene]) return;
+    ensureRefugeArtwork();
     const preview = $('#refugeScene');
     preview.dataset.scene = scene;
     $('#refugeSceneTitle').textContent = SCENES[scene].title;
@@ -241,7 +319,9 @@
       button.classList.toggle('is-active', active);
       button.setAttribute('aria-pressed', String(active));
     });
+    if (suggestSound && SCENE_AMBIENCE[scene]) selectAmbience(SCENE_AMBIENCE[scene]);
   }
+
   function selectAmbience(ambience) {
     if (!AMBIENCES[ambience]) return;
     selectedAmbience = ambience;
@@ -251,56 +331,96 @@
       button.setAttribute('aria-pressed', String(active));
     });
     if (playing) startAmbientSound();
-    else $('#ambienceStatus').textContent = 'Ambiente escolhido: ' + AMBIENCES[ambience].label + '. Aperte “ouvir ambiente” quando quiser começar.';
+    else $('#ambienceStatus').textContent = 'Som escolhido: ' + AMBIENCES[ambience].label + '. Aperte “ouvir ambiente” para começar.';
   }
+
   function stopAmbientSound(showStatus) {
     const wasPlaying = playing;
+    if (audioPlayer) {
+      try { audioPlayer.pause(); audioPlayer.currentTime = 0; } catch (error) {}
+      audioPlayer = null;
+    }
     if (noiseSource) { try { noiseSource.stop(); } catch (error) {} try { noiseSource.disconnect(); } catch (error) {} }
-    if (ambientLfo) { try { ambientLfo.stop(); } catch (error) {} try { ambientLfo.disconnect(); } catch (error) {} }
-    [ambientFilter, ambientGain, ambientLfoGain].forEach((node) => { if (node) { try { node.disconnect(); } catch (error) {} } });
+    [ambientFilter, ambientGain, ambientLfo, ambientLfoGain].forEach((node) => {
+      if (node) {
+        try { if (typeof node.stop === 'function') node.stop(); } catch (error) {}
+        try { node.disconnect(); } catch (error) {}
+      }
+    });
     if (audioContext) { try { audioContext.close(); } catch (error) {} }
     audioContext = null; noiseSource = null; ambientFilter = null; ambientGain = null; ambientLfo = null; ambientLfoGain = null; playing = false;
     const toggle = $('#ambienceToggleButton');
     if (toggle) toggle.textContent = 'ouvir ambiente';
     if (showStatus && wasPlaying && $('#ambienceStatus')) $('#ambienceStatus').textContent = 'Som ambiente pausado.';
   }
+
   async function startAmbientSound() {
     stopAmbientSound(false);
+    const profile = AMBIENCES[selectedAmbience];
+    const volume = Math.min(0.6, Math.max(0, Number($('#ambienceVolume').value || 0) / 100));
+
+    if (profile.src) {
+      const player = new Audio();
+      player.src = profile.src;
+      player.preload = 'none';
+      player.loop = true;
+      player.volume = volume;
+      audioPlayer = player;
+      try {
+        await player.play();
+        if (audioPlayer !== player) return;
+        playing = true;
+        $('#ambienceToggleButton').textContent = 'pausar som';
+        $('#ambienceStatus').textContent = 'Tocando: ' + profile.label + '. Gravação ambiental em repetição.';
+      } catch (error) {
+        if (audioPlayer === player) {
+          audioPlayer = null;
+          player.pause();
+          $('#ambienceToggleButton').textContent = 'ouvir ambiente';
+          $('#ambienceStatus').textContent = 'Não foi possível carregar esta gravação agora. Verifique a conexão e tente novamente.';
+        }
+      }
+      return;
+    }
+
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContextClass) { $('#ambienceStatus').textContent = 'Este navegador não oferece áudio gerado. Você ainda pode usar os cenários visuais.'; return; }
+    if (!AudioContextClass) {
+      $('#ambienceStatus').textContent = 'Este navegador não oferece áudio. Você ainda pode aproveitar os cenários visuais.';
+      return;
+    }
     try {
       audioContext = new AudioContextClass();
       await audioContext.resume();
       const sampleRate = audioContext.sampleRate;
-      const buffer = audioContext.createBuffer(1, sampleRate * 3, sampleRate);
+      const buffer = audioContext.createBuffer(1, sampleRate * 8, sampleRate);
       const channel = buffer.getChannelData(0);
       for (let i = 0; i < channel.length; i += 1) channel[i] = Math.random() * 2 - 1;
-      const profile = AMBIENCES[selectedAmbience];
-      noiseSource = audioContext.createBufferSource(); noiseSource.buffer = buffer; noiseSource.loop = true;
-      ambientFilter = audioContext.createBiquadFilter(); ambientFilter.type = profile.filter; ambientFilter.frequency.value = profile.cutoff; ambientFilter.Q.value = selectedAmbience === 'forest' ? 0.25 : 0.55;
+      noiseSource = audioContext.createBufferSource();
+      noiseSource.buffer = buffer;
+      noiseSource.loop = true;
+      ambientFilter = audioContext.createBiquadFilter();
+      ambientFilter.type = profile.filter || 'lowpass';
+      ambientFilter.frequency.value = profile.cutoff || 1700;
       ambientGain = audioContext.createGain();
-      const volume = Number($('#ambienceVolume').value || 25) / 100;
-      ambientGain.gain.value = volume * profile.level;
-      ambientLfo = audioContext.createOscillator(); ambientLfo.frequency.value = profile.rate;
-      ambientLfoGain = audioContext.createGain(); ambientLfoGain.gain.value = volume * profile.modulation;
-      ambientLfo.connect(ambientLfoGain); ambientLfoGain.connect(ambientGain.gain);
+      ambientGain.gain.value = volume * (profile.level || 0.13);
       noiseSource.connect(ambientFilter); ambientFilter.connect(ambientGain); ambientGain.connect(audioContext.destination);
-      noiseSource.start(); ambientLfo.start(); playing = true;
-      $('#ambienceToggleButton').textContent = 'silenciar ambiente';
-      $('#ambienceStatus').textContent = 'Tocando: ' + profile.label + '. Som gerado no navegador.';
+      noiseSource.start(); playing = true;
+      $('#ambienceToggleButton').textContent = 'pausar som';
+      $('#ambienceStatus').textContent = 'Tocando: ' + profile.label + '. Textura uniforme criada no navegador.';
     } catch (error) {
       console.error('Não foi possível iniciar o som ambiente.', error);
-      stopAmbientSound(false); $('#ambienceStatus').textContent = 'Não foi possível iniciar o som. Toque novamente para tentar.';
+      stopAmbientSound(false);
+      $('#ambienceStatus').textContent = 'Não foi possível iniciar o som. Toque novamente para tentar.';
     }
   }
+
   function updateAmbientVolume() {
     const value = Number($('#ambienceVolume').value || 0);
     $('#ambienceVolumeLabel').textContent = value + '%';
-    if (ambientGain && ambientLfoGain) {
-      const profile = AMBIENCES[selectedAmbience], volume = value / 100;
-      ambientGain.gain.value = volume * profile.level; ambientLfoGain.gain.value = volume * profile.modulation;
-    }
+    if (audioPlayer) audioPlayer.volume = Math.min(0.6, Math.max(0, value / 100));
+    if (ambientGain) ambientGain.gain.value = (value / 100) * (AMBIENCES.white.level || 0.13);
   }
+
   function readRefugePresets() {
     let saved = readArray(REFUGE_PRESETS_KEY).filter((item) => item && typeof item === 'object');
     if (!saved.length) {
@@ -333,7 +453,7 @@
   }
   function applyRefugePreset(preset, updateName = true) {
     if (!preset) return;
-    selectScene(SCENES[preset.scene] ? preset.scene : 'night');
+    selectScene(SCENES[preset.scene] ? preset.scene : 'night', false);
     selectAmbience(AMBIENCES[preset.ambience] ? preset.ambience : 'rain');
     $('#ambienceVolume').value=String(Math.min(60,Math.max(0,Number(preset.volume ?? 25))));
     $('#ambienceVolumeLabel').textContent=$('#ambienceVolume').value+'%';
@@ -1486,6 +1606,7 @@
     $('#ambienceVolume').addEventListener('input', updateAmbientVolume);
     $('#saveRefugePresetButton').addEventListener('click', saveRefugePreset);
     $('#loadRefugePresetButton').addEventListener('click', loadRefugePreset);
+    ensureRefugeArtwork();
     const personalRefuge=readObject(REFUGE_PERSONAL_KEY)||{};
     setRefugeAccent(personalRefuge.accent||'#82b3a2');setRefugePhrase(personalRefuge.phrase||'');
     const savedPresets=readRefugePresets(),savedPreset=savedPresets[savedPresets.length-1]||readObject(REFUGE_KEY);
