@@ -44,7 +44,7 @@
     wind: { label: 'vento', description: 'vento passando pelas árvores', src: 'https://upload.wikimedia.org/wikipedia/commons/e/eb/Daniel_Birch_-_03_-_Trees_In_The_Wind.ogg' },
     forest: { label: 'floresta', description: 'aves, insetos e vento entre as árvores', src: 'https://upload.wikimedia.org/wikipedia/commons/0/0a/20090610_0_ambience.ogg' },
     brook: { label: 'riacho', description: 'água corrente sobre pedras', src: 'https://upload.wikimedia.org/wikipedia/commons/2/26/Flowing-water-100019.ogg' },
-    embers: { label: 'brasa suave', description: 'madeira estalando em fogo baixo', src: 'https://upload.wikimedia.org/wikipedia/commons/8/80/Bones_breaking_wood_fire_ice_crackling.ogg' },
+    embers: { label: 'brasa suave', description: 'madeira estalando em fogo baixo', src: 'https://upload.wikimedia.org/wikipedia/commons/b/b1/Campfire_sound_ambience.ogg' },
     night: { label: 'noite', description: 'sons distantes de uma noite calma', src: 'https://upload.wikimedia.org/wikipedia/commons/f/fb/Country_night_noise.ogg' },
     white: { label: 'ruído uniforme', description: 'som contínuo, sem grandes variações', src: null, filter: 'lowpass', cutoff: 1700, level: 0.13 }
   };
