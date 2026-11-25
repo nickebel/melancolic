@@ -388,3 +388,104 @@ body {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+
+/* Ajustes finos: consistência tipográfica, cartões e quebras responsivas. */
+html, body { max-width: 100%; overflow-x: clip; }
+*, *::before, *::after { box-sizing: border-box; }
+.page, .section-shell, .extras-shell, .pause-shell,
+.page > section, .page-heading, .section-heading,
+.glass-card, .creative-card, .extra-card, .pause-card,
+.writing-card, .refuge-controls, .timeline-filters {
+  min-width: 0;
+  max-width: 100%;
+}
+.page-heading > *, .section-heading > *, .home-paths-heading > *,
+.extra-action-row > *, .creative-toolbar > *, .writing-header > *,
+.timeline-card-top > *, .entry-top > * {
+  min-width: 0;
+}
+h1, h2, h3, h4, p, small, label, button, a, time, output {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+p { text-wrap: pretty; }
+h1, h2, h3 { text-wrap: balance; }
+body {
+  font-size: 14px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+.hero h1, .extras-intro h1, .pause-intro h1, .writing-header h1 {
+  line-height: 1.08;
+}
+.hero-text, .extras-intro > p:last-child, .pause-intro > p:last-child,
+.page-heading p:not(.eyebrow), .breath-copy > p:not(.eyebrow),
+.refuge-scene-copy > p:not(.eyebrow), .feature-footnote {
+  max-width: 64ch;
+  font-size: 13px;
+  line-height: 1.8;
+}
+.section-heading h2, .page-heading h2, .extra-card h2,
+.refuge-controls h2, .creative-card h2, .kit-callout h2,
+.breath-copy h2, .reflection-box h3, .message-surprise h2,
+.weather-current h2 {
+  line-height: 1.2;
+  text-wrap: balance;
+}
+.field { min-width: 0; }
+.field input, .field textarea, .field select {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  line-height: 1.65;
+}
+.field textarea { min-height: 130px; }
+button, .tool-button, .save-button { max-width: 100%; white-space: normal; line-height: 1.45; }
+.glass-card, .creative-card, .extra-card, .pause-card,
+.writing-card, .refuge-controls, .timeline-filters {
+  border-radius: 18px;
+  overflow: hidden;
+}
+.home-path-grid, .museum-items, .personal-message-list,
+.weather-options, .scene-options, .ambience-options,
+.media-gallery, .entries-list, .timeline-list {
+  min-width: 0;
+}
+.home-path { min-width: 0; overflow: hidden; }
+.home-path-title, .home-path-copy { max-width: 100%; }
+.composer-tools, .upload-group, .extra-action-row,
+.creative-actions, .ritual-actions, .backup-actions,
+.pin-actions, .refuge-preset-actions, .writing-footer {
+  min-width: 0;
+  flex-wrap: wrap;
+}
+.upload-group > * { min-width: 0; }
+.entry-text, .timeline-card-text, .constellation-memory-text,
+.past-memory-text, .museum-memory-text, .personal-message-copy {
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+@media (max-width: 760px) {
+  .page, .section-shell, .extras-shell { width: calc(100% - 30px); }
+  .page-heading, .section-heading { gap: 12px; }
+  .page-heading { align-items: flex-start; }
+  .composer-tools { align-items: stretch; }
+  .upload-group { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .upload-group .tool-button, .upload-group label { justify-content: center; }
+  .composer-tools > .save-button { width: 100%; }
+  .extra-action-row, .creative-actions, .writing-footer { align-items: stretch; }
+  .extra-action-row > *, .creative-actions > * { max-width: 100%; }
+  .timeline-filters, .refuge-controls, .extra-card, .pause-card,
+  .creative-card, .writing-card { overflow: visible; }
+}
+@media (max-width: 420px) {
+  .home-path { padding-inline: 13px; }
+  .home-path-copy { font-size: 10px; }
+  .section-heading h2, .page-heading h2 { font-size: 23px; }
+  .field > span { line-height: 1.5; }
+  .upload-group { grid-template-columns: 1fr; }
+}
