@@ -447,7 +447,7 @@ button, .tool-button, .save-button { max-width: 100%; white-space: normal; line-
 .glass-card, .creative-card, .extra-card, .pause-card,
 .writing-card, .refuge-controls, .timeline-filters {
   border-radius: 18px;
-  overflow: hidden;
+  overflow: visible;
 }
 .home-path-grid, .museum-items, .personal-message-list,
 .weather-options, .scene-options, .ambience-options,
